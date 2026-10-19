@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>CMS ผู้ใช้</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#2741cc}a:hover{color:#1a2f9e}
+td{padding:10px 14px;border-top:1px solid #e6e9ef;vertical-align:top}
+th{text-align:left;padding:10px 14px;font-size:12px;color:#5b6478;white-space:nowrap}
+</style>
+</helmet>
+<div style="min-height: 1040px; box-sizing: border-box; background: #eef0f4; color: #1d2330; font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', system-ui, sans-serif; font-size: 15px; line-height: 1.6; display: flex; flex-direction: column">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 28px; background: #ffffff; border-bottom: 1.5px solid #dde1e8">
+    <span style="display: flex; align-items: center; gap: 10px">
+      <span aria-hidden="true" style="width: 20px; height: 20px; border: 3px solid #1d2330; border-radius: 3px; box-sizing: border-box; display: block"></span>
+      <span style="font-family: 'Bai Jamjuree', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: 0.04em">QREASY CMS</span>
+    </span>
+    <span style="display: flex; align-items: center; gap: 12px; font-size: 14px; color: #5b6478">admin@qreasy.info · Super Admin <button style="font: inherit; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 8px; padding: 6px 12px">ออกจากระบบ</button></span>
+  </header>
+
+  <div style="flex-grow: 1; display: flex; flex-wrap: wrap; gap: 24px; padding: 24px 28px 48px">
+    <nav aria-label="เมนู CMS" style="flex: 1 1 180px; max-width: 220px; display: flex; flex-direction: column; gap: 4px">
+      <a href="AdminOverview.dc.html" style="text-decoration: none; color: #3a4256; padding: 9px 14px; border-radius: 8px">ภาพรวม</a>
+      <a href="#users" aria-current="page" style="text-decoration: none; color: #ffffff; background: #1d2330; padding: 9px 14px; border-radius: 8px; font-weight: 600">ผู้ใช้</a>
+      <a href="AdminAds.dc.html" style="text-decoration: none; color: #3a4256; padding: 9px 14px; border-radius: 8px">โฆษณาและ GA</a>
+      <a href="AdminAffiliate.dc.html" style="text-decoration: none; color: #3a4256; padding: 9px 14px; border-radius: 8px">Affiliate</a>
+      <a href="AdminAudit.dc.html" style="text-decoration: none; color: #3a4256; padding: 9px 14px; border-radius: 8px">Audit Log</a>
+    </nav>
+
+    <main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+      <div>
+        <h1 style="margin: 0; font-family: 'Bai Jamjuree', sans-serif; font-weight: 700; font-size: 30px">ผู้ใช้</h1>
+        <p style="margin: 0; color: #5b6478">ค้นหา ระงับ ลบ หรือเปลี่ยนบทบาท ทุกการกระทำถูกบันทึกใน Audit Log</p>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end">
+        <div style="flex: 2 1 240px; display: flex; flex-direction: column; gap: 4px">
+          <label for="u-q" style="font-size: 13px; font-weight: 500">ค้นหาชื่อหรืออีเมล</label>
+          <input id="u-q" style="font: inherit; padding: 9px 12px; border: 1.5px solid #c9ced8; border-radius: 8px; background: #ffffff; color: #1d2330">
+        </div>
+        <div style="flex: 1 1 140px; display: flex; flex-direction: column; gap: 4px">
+          <label for="u-s" style="font-size: 13px; font-weight: 500">สถานะ</label>
+          <select id="u-s" style="font: inherit; padding: 9px 10px; border: 1.5px solid #c9ced8; border-radius: 8px; background: #ffffff; color: #1d2330"><option>ทั้งหมด</option></select>
+        </div>
+        <div style="flex: 1 1 140px; display: flex; flex-direction: column; gap: 4px">
+          <label for="u-r" style="font-size: 13px; font-weight: 500">บทบาท</label>
+          <select id="u-r" style="font: inherit; padding: 9px 10px; border: 1.5px solid #c9ced8; border-radius: 8px; background: #ffffff; color: #1d2330"><option>ทั้งหมด</option></select>
+        </div>
+        <div style="flex: 1 1 140px; display: flex; flex-direction: column; gap: 4px">
+          <label for="u-p" style="font-size: 13px; font-weight: 500">สมัครด้วย</label>
+          <select id="u-p" style="font: inherit; padding: 9px 10px; border: 1.5px solid #c9ced8; border-radius: 8px; background: #ffffff; color: #1d2330"><option>ทั้งหมด</option></select>
+        </div>
+        <button style="font: inherit; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 8px; padding: 9px 14px">ส่งออก CSV</button>
+      </div>
+
+      <div style="background: #ffffff; border: 1.5px solid #dde1e8; border-radius: 12px; overflow-x: auto">
+        <table style="width: 100%; min-width: 860px; border-collapse: collapse; font-size: 14px">
+          <thead><tr style="background: #f4f5f8"><th>ผู้ใช้</th><th>บทบาท</th><th>สถานะ</th><th>สมัครด้วย</th><th>สมัครเมื่อ</th><th>Login ล่าสุด</th><th style="text-align: right">QR</th><th></th></tr></thead>
+          <tbody>
+            <tr><td><div>[ชื่อ]</div><div style="font-size: 13px; color: #5b6478">[อีเมล]</div></td><td><span style="font-size: 12px; font-weight: 600; background: #e6e9ef; color: #3a4256; border-radius: 999px; padding: 2px 9px">สมาชิก</span></td><td><span style="font-size: 12px; font-weight: 600; background: #dcf1e5; color: #1b6f45; border-radius: 999px; padding: 2px 9px">ใช้งาน</span></td><td>Google</td><td>[วันที่]</td><td>[วันที่]</td><td style="text-align: right">3</td><td><button style="font: inherit; font-size: 13px; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 8px; padding: 4px 12px">จัดการ</button></td></tr>
+            <tr style="background: #e2e7fc"><td><div>[ชื่อ]</div><div style="font-size: 13px; color: #5b6478">[อีเมล]</div></td><td><span style="font-size: 12px; font-weight: 600; background: #e6e9ef; color: #3a4256; border-radius: 999px; padding: 2px 9px">สมาชิก</span></td><td><span style="font-size: 12px; font-weight: 600; background: #dcf1e5; color: #1b6f45; border-radius: 999px; padding: 2px 9px">ใช้งาน</span></td><td>อีเมล</td><td>[วันที่]</td><td>[วันที่]</td><td style="text-align: right">12</td><td><button aria-expanded="true" style="font: inherit; font-size: 13px; color: #1d2330; background: #ffffff; border: 1.5px solid #1d2330; border-radius: 8px; padding: 4px 12px">ปิด</button></td></tr>
+            <tr style="background: #f4f5f8"><td colspan="8" style="padding: 18px">
+              <div style="display: flex; flex-wrap: wrap; gap: 24px">
+                <dl style="flex: 1 1 260px; margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; font-size: 14px">
+                  <dt style="color: #5b6478">ยืนยันอีเมล</dt><dd style="margin: 0">แล้ว</dd>
+                  <dt style="color: #5b6478">สมัครเมื่อ</dt><dd style="margin: 0">[วันที่ เวลา]</dd>
+                  <dt style="color: #5b6478">Login ล่าสุด</dt><dd style="margin: 0">[วันที่ เวลา]</dd>
+                  <dt style="color: #5b6478">อุปกรณ์ที่ Login อยู่</dt><dd style="margin: 0">2</dd>
+                  <dt style="color: #5b6478">หมายเหตุ</dt><dd style="margin: 0; color: #5b6478">CMS ไม่แสดงเนื้อหาใน QR และไม่มีทางดูหรือตั้งรหัสผ่านแทนผู้ใช้</dd>
+                </dl>
+                <div style="flex: 1.4 1 340px; display: flex; flex-direction: column; gap: 12px">
+                  <div style="display: flex; flex-direction: column; gap: 4px">
+                    <label for="rs" style="font-size: 13px; font-weight: 500">ระงับบัญชี (ต้องระบุเหตุผล)</label>
+                    <div style="display: flex; gap: 8px"><input id="rs" placeholder="เช่น ใช้ QR หลอกลวง" style="flex-grow: 1; min-width: 0; font: inherit; padding: 8px 12px; border: 1.5px solid #c9ced8; border-radius: 8px; background: #ffffff; color: #1d2330"><button style="font: inherit; color: #ab2238; background: #ffffff; border: 1.5px solid #ab2238; border-radius: 8px; padding: 7px 14px">ระงับ</button></div>
+                  </div>
+                  <div style="display: flex; flex-wrap: wrap; gap: 8px">
+                    <button style="font: inherit; font-size: 14px; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 8px; padding: 6px 12px">Logout ทุกอุปกรณ์</button>
+                    <button style="font: inherit; font-size: 14px; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 8px; padding: 6px 12px">ส่งอีเมลยืนยันซ้ำ</button>
+                    <button style="font: inherit; font-size: 14px; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 8px; padding: 6px 12px">ส่งลิงก์ตั้งรหัสผ่านใหม่</button>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 4px">
+                    <label for="rl" style="font-size: 13px; font-weight: 500">บทบาท (เฉพาะ Super Admin)</label>
+                    <div style="display: flex; gap: 8px"><select id="rl" style="flex-grow: 1; font: inherit; padding: 8px 10px; border: 1.5px solid #c9ced8; border-radius: 8px; background: #ffffff; color: #1d2330"><option>สมาชิก</option></select><button style="font: inherit; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 8px; padding: 7px 14px">บันทึกบทบาท</button></div>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 4px">
+                    <label for="dl" style="font-size: 13px; font-weight: 500">ลบบัญชี: พิมพ์อีเมลของผู้ใช้เพื่อยืนยัน</label>
+                    <div style="display: flex; gap: 8px"><input id="dl" placeholder="[อีเมลผู้ใช้]" style="flex-grow: 1; min-width: 0; font: inherit; padding: 8px 12px; border: 1.5px solid #c9ced8; border-radius: 8px; background: #ffffff; color: #1d2330"><button style="font: inherit; color: #ffffff; background: #ab2238; border: 0; border-radius: 8px; padding: 8px 14px">ลบ</button></div>
+                  </div>
+                </div>
+              </div>
+            </td></tr>
+            <tr><td><div>[ชื่อ]</div><div style="font-size: 13px; color: #5b6478">[อีเมล]</div></td><td><span style="font-size: 12px; font-weight: 600; background: #e6e9ef; color: #3a4256; border-radius: 999px; padding: 2px 9px">สมาชิก</span></td><td><span style="font-size: 12px; font-weight: 600; background: #fbe1e6; color: #ab2238; border-radius: 999px; padding: 2px 9px">ถูกระงับ</span></td><td>อีเมล</td><td>[วันที่]</td><td>[วันที่]</td><td style="text-align: right">0</td><td><button style="font: inherit; font-size: 13px; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 8px; padding: 4px 12px">จัดการ</button></td></tr>
+            <tr><td><div>[ชื่อ]</div><div style="font-size: 13px; color: #5b6478">[อีเมล]</div></td><td><span style="font-size: 12px; font-weight: 600; background: #e2e7fc; color: #2741cc; border-radius: 999px; padding: 2px 9px">Admin</span></td><td><span style="font-size: 12px; font-weight: 600; background: #dcf1e5; color: #1b6f45; border-radius: 999px; padding: 2px 9px">ใช้งาน</span></td><td>อีเมล</td><td>[วันที่]</td><td>[วันที่]</td><td style="text-align: right">0</td><td><button style="font: inherit; font-size: 13px; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 8px; padding: 4px 12px">จัดการ</button></td></tr>
+            <tr><td><div>[ชื่อ]</div><div style="font-size: 13px; color: #5b6478">[อีเมล]</div></td><td><span style="font-size: 12px; font-weight: 600; background: #e6e9ef; color: #3a4256; border-radius: 999px; padding: 2px 9px">สมาชิก</span></td><td><span style="font-size: 12px; font-weight: 600; background: #dcf1e5; color: #1b6f45; border-radius: 999px; padding: 2px 9px">ใช้งาน</span></td><td>LINE</td><td>[วันที่]</td><td>[วันที่]</td><td style="text-align: right">1</td><td><button style="font: inherit; font-size: 13px; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 8px; padding: 4px 12px">จัดการ</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; font-size: 14px; color: #5b6478">
+        <span>แสดง 1–25 จาก [ทั้งหมด] บัญชี</span>
+        <span style="display: flex; gap: 6px"><button style="font: inherit; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 8px; padding: 6px 12px">ก่อนหน้า</button><button style="font: inherit; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 8px; padding: 6px 12px">ถัดไป</button></span>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1040}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

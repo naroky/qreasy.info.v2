@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>CMS โฆษณาและ GA</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#2741cc}a:hover{color:#1a2f9e}
+td{padding:10px 14px;border-top:1px solid #e6e9ef;vertical-align:middle}
+th{text-align:left;padding:10px 14px;font-size:12px;color:#5b6478;white-space:nowrap}
+</style>
+</helmet>
+<div style="min-height: 1100px; box-sizing: border-box; background: #eef0f4; color: #1d2330; font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', system-ui, sans-serif; font-size: 15px; line-height: 1.6; display: flex; flex-direction: column">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 28px; background: #ffffff; border-bottom: 1.5px solid #dde1e8">
+    <span style="display: flex; align-items: center; gap: 10px">
+      <span aria-hidden="true" style="width: 20px; height: 20px; border: 3px solid #1d2330; border-radius: 3px; box-sizing: border-box; display: block"></span>
+      <span style="font-family: 'Bai Jamjuree', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: 0.04em">QREASY CMS</span>
+    </span>
+    <span style="display: flex; align-items: center; gap: 12px; font-size: 14px; color: #5b6478">admin@qreasy.info · Super Admin <button style="font: inherit; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 8px; padding: 6px 12px">ออกจากระบบ</button></span>
+  </header>
+
+  <div style="flex-grow: 1; display: flex; flex-wrap: wrap; gap: 24px; padding: 24px 28px 48px">
+    <nav aria-label="เมนู CMS" style="flex: 1 1 180px; max-width: 220px; display: flex; flex-direction: column; gap: 4px">
+      <a href="AdminOverview.dc.html" style="text-decoration: none; color: #3a4256; padding: 9px 14px; border-radius: 8px">ภาพรวม</a>
+      <a href="AdminUsers.dc.html" style="text-decoration: none; color: #3a4256; padding: 9px 14px; border-radius: 8px">ผู้ใช้</a>
+      <a href="#ads" aria-current="page" style="text-decoration: none; color: #ffffff; background: #1d2330; padding: 9px 14px; border-radius: 8px; font-weight: 600">โฆษณาและ GA</a>
+      <a href="AdminAffiliate.dc.html" style="text-decoration: none; color: #3a4256; padding: 9px 14px; border-radius: 8px">Affiliate</a>
+      <a href="AdminAudit.dc.html" style="text-decoration: none; color: #3a4256; padding: 9px 14px; border-radius: 8px">Audit Log</a>
+    </nav>
+
+    <main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+      <div>
+        <h1 style="margin: 0; font-family: 'Bai Jamjuree', sans-serif; font-weight: 700; font-size: 30px">โฆษณาและ GA</h1>
+        <p style="margin: 0; color: #5b6478">บันทึกแล้วมีผลกับหน้าเว็บภายใน 1 นาที</p>
+      </div>
+
+      <section style="background: #ffffff; border: 1.5px solid #dde1e8; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 10px">
+        <h2 style="margin: 0; font-size: 17px; font-weight: 600">โฆษณา</h2>
+        <label style="display: flex; align-items: center; gap: 10px; font-weight: 500"><input type="checkbox" checked style="width: 18px; height: 18px"> แสดงโฆษณาทั้งเว็บไซต์</label>
+        <label style="display: flex; align-items: center; gap: 10px; font-weight: 500"><input type="checkbox" style="width: 18px; height: 18px"> ซ่อนโฆษณาให้สมาชิกที่ Login อยู่</label>
+        <p style="margin: 0; font-size: 13px; color: #5b6478">หน้า Login, สมัครสมาชิก, บัญชี และ CMS ไม่มีโฆษณาเสมอ</p>
+      </section>
+
+      <div style="background: #ffffff; border: 1.5px solid #dde1e8; border-radius: 12px; overflow-x: auto">
+        <table style="width: 100%; min-width: 760px; border-collapse: collapse; font-size: 14px">
+          <thead><tr style="background: #f4f5f8"><th>ตำแหน่ง</th><th>ขนาด</th><th>เครือข่าย</th><th>Ad client</th><th>Ad slot ID</th><th>เปิด</th></tr></thead>
+          <tbody>
+            <tr><td style="font-family: 'IBM Plex Mono', monospace">generator_side</td><td>300×600</td><td>AdSense</td><td><input aria-label="Ad client generator_side" value="ca-pub-[16 หลัก]" style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; padding: 6px 8px; border: 1.5px solid #c9ced8; border-radius: 6px; width: 190px"></td><td><input aria-label="Ad slot generator_side" value="[slot id]" style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; padding: 6px 8px; border: 1.5px solid #c9ced8; border-radius: 6px; width: 120px"></td><td><input type="checkbox" checked aria-label="เปิด generator_side" style="width: 18px; height: 18px"></td></tr>
+            <tr><td style="font-family: 'IBM Plex Mono', monospace">generator_below</td><td>320×100 / Responsive</td><td>AdSense</td><td><input aria-label="Ad client generator_below" value="ca-pub-[16 หลัก]" style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; padding: 6px 8px; border: 1.5px solid #c9ced8; border-radius: 6px; width: 190px"></td><td><input aria-label="Ad slot generator_below" value="[slot id]" style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; padding: 6px 8px; border: 1.5px solid #c9ced8; border-radius: 6px; width: 120px"></td><td><input type="checkbox" checked aria-label="เปิด generator_below" style="width: 18px; height: 18px"></td></tr>
+            <tr><td style="font-family: 'IBM Plex Mono', monospace">mobile_anchor</td><td>320×50</td><td>AdSense</td><td><input aria-label="Ad client mobile_anchor" value="ca-pub-[16 หลัก]" style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; padding: 6px 8px; border: 1.5px solid #c9ced8; border-radius: 6px; width: 190px"></td><td><input aria-label="Ad slot mobile_anchor" value="[slot id]" style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; padding: 6px 8px; border: 1.5px solid #c9ced8; border-radius: 6px; width: 120px"></td><td><input type="checkbox" aria-label="เปิด mobile_anchor" style="width: 18px; height: 18px"></td></tr>
+            <tr><td style="font-family: 'IBM Plex Mono', monospace">article_inline</td><td>Responsive</td><td>AdSense</td><td><input aria-label="Ad client article_inline" value="ca-pub-[16 หลัก]" style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; padding: 6px 8px; border: 1.5px solid #c9ced8; border-radius: 6px; width: 190px"></td><td><input aria-label="Ad slot article_inline" value="[slot id]" style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; padding: 6px 8px; border: 1.5px solid #c9ced8; border-radius: 6px; width: 120px"></td><td><input type="checkbox" checked aria-label="เปิด article_inline" style="width: 18px; height: 18px"></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin: -8px 0 0; font-size: 13px; color: #ab2238">ตัวอย่างข้อความผิดพลาด: Ad client ต้องเป็น ca-pub- ตามด้วยตัวเลข 16 หลัก</p>
+
+      <section style="background: #ffffff; border: 1.5px solid #dde1e8; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 10px">
+        <h2 style="margin: 0; font-size: 17px; font-weight: 600">ทดสอบเครือข่ายโฆษณา (A/B) · Phase 1.1</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; font-size: 14px">
+          <span>AdSense</span><input aria-label="สัดส่วน AdSense" value="80" style="width: 56px; text-align: right; font: inherit; padding: 6px 8px; border: 1.5px solid #c9ced8; border-radius: 6px"> %
+          <span style="margin-left: 12px">Ezoic</span><input aria-label="สัดส่วน Ezoic" value="20" style="width: 56px; text-align: right; font: inherit; padding: 6px 8px; border: 1.5px solid #c9ced8; border-radius: 6px"> %
+          <a href="#experiment" style="margin-left: auto">ดูผล RPM และ Web Vitals</a>
+        </div>
+      </section>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px">
+        <section style="background: #ffffff; border: 1.5px solid #dde1e8; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 10px">
+          <h2 style="margin: 0; font-size: 17px; font-weight: 600">Google Analytics 4</h2>
+          <label style="display: flex; align-items: center; gap: 10px; font-weight: 500"><input type="checkbox" checked style="width: 18px; height: 18px"> เก็บข้อมูล Analytics</label>
+          <label for="ga" style="font-size: 13px; font-weight: 500">Measurement ID</label>
+          <input id="ga" value="G-[XXXXXXX]" style="font-family: 'IBM Plex Mono', monospace; padding: 8px 10px; border: 1.5px solid #c9ced8; border-radius: 8px">
+        </section>
+        <section style="background: #ffffff; border: 1.5px solid #dde1e8; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 10px">
+          <h2 style="margin: 0; font-size: 17px; font-weight: 600">ads.txt</h2>
+          <label for="adstxt" style="font-size: 13px; font-weight: 500">เนื้อหาไฟล์ /ads.txt</label>
+          <textarea id="adstxt" style="min-height: 88px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; padding: 8px 10px; border: 1.5px solid #c9ced8; border-radius: 8px">google.com, pub-[16 หลัก], DIRECT, [cert id]</textarea>
+        </section>
+      </div>
+
+      <div><button style="font: inherit; font-weight: 600; color: #ffffff; background: #2741cc; border: 0; border-radius: 10px; padding: 11px 22px">บันทึกการตั้งค่า</button></div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1100}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Fast QR มือถือ เปิดปรับแต่ง</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#2741cc}a:hover{color:#1a2f9e}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; overflow: hidden; background: #f6f7f9; color: #1d2330; font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', system-ui, sans-serif; font-size: 15px; line-height: 1.6; display: flex; flex-direction: column">
+  <header style="display: flex; align-items: center; justify-content: space-between; padding: 14px 16px">
+    <a href="#top" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: #1d2330">
+      <span aria-hidden="true" style="width: 18px; height: 18px; border: 3px solid #1d2330; border-radius: 3px; box-sizing: border-box; display: block"></span>
+      <span style="font-family: 'Bai Jamjuree', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 0.04em">QREASY<span style="color: #2741cc">.INFO</span></span>
+    </a>
+    <a href="#login" style="text-decoration: none; color: #1d2330; font-weight: 500; padding: 10px 8px">เข้าสู่ระบบ</a>
+  </header>
+
+  <main style="flex-grow: 1; display: flex; flex-direction: column; gap: 16px; padding: 8px 20px 20px">
+    <div>
+      <label for="fast-c" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">ลิงก์หรือข้อความ</label>
+      <input id="fast-c" value="https://www.qreasy.info" style="width: 100%; box-sizing: border-box; font: inherit; font-size: 17px; padding: 12px 16px; border: 1.5px solid #c9ced8; border-radius: 14px; background: #ffffff; color: #1d2330">
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 16px">
+      <div role="img" aria-label="พรีวิว QR Code สีที่เลือก" style="width: 128px; height: 128px; flex-shrink: 0; position: relative; box-sizing: border-box; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 10px">
+        <div style="position: absolute; inset: 10px; background: repeating-linear-gradient(45deg, #d7ddf7 0 5px, transparent 5px 10px); border-radius: 4px"></div>
+        <div style="position: absolute; left: 10px; top: 10px; width: 32px; height: 32px; box-sizing: border-box; border: 5px solid #2741cc; border-radius: 8px; background: #ffffff"></div>
+        <div style="position: absolute; right: 10px; top: 10px; width: 32px; height: 32px; box-sizing: border-box; border: 5px solid #2741cc; border-radius: 8px; background: #ffffff"></div>
+        <div style="position: absolute; left: 10px; bottom: 10px; width: 32px; height: 32px; box-sizing: border-box; border: 5px solid #2741cc; border-radius: 8px; background: #ffffff"></div>
+        <div style="position: absolute; left: 47px; top: 47px; width: 34px; height: 34px; box-sizing: border-box; border: 1.5px solid #c9ced8; border-radius: 6px; background: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #5b6478">โลโก้</div>
+      </div>
+      <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 4px">
+        <button style="font: inherit; font-weight: 600; font-size: 16px; color: #ffffff; background: #2741cc; border: 0; border-radius: 12px; padding: 12px 16px">ดาวน์โหลด PNG</button>
+        <div style="display: flex; justify-content: center; gap: 2px">
+          <button style="border: 0; background: transparent; font: inherit; color: #3a4256; min-height: 44px; padding: 0 10px">SVG</button>
+          <button style="border: 0; background: transparent; font: inherit; color: #3a4256; min-height: 44px; padding: 0 10px">บันทึก</button>
+        </div>
+      </div>
+    </div>
+
+    <section aria-label="ปรับแต่ง" style="background: #ffffff; border: 1.5px solid #dde1e8; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 16px">
+      <div style="display: flex; align-items: center; justify-content: space-between">
+        <h2 style="margin: 0; font-family: 'Bai Jamjuree', sans-serif; font-weight: 600; font-size: 17px">ปรับแต่ง</h2>
+        <button style="border: 0; background: transparent; font: inherit; color: #2741cc; min-height: 44px">ซ่อน ▴</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <span style="font-size: 13px; font-weight: 500; color: #3a4256">สีจุด</span>
+        <div style="display: flex; gap: 10px">
+          <button aria-label="สีกรมท่า" style="width: 36px; height: 36px; border-radius: 50%; border: 0; background: #1d2330"></button>
+          <button aria-label="สีน้ำเงิน เลือกอยู่" style="width: 36px; height: 36px; border-radius: 50%; border: 3px solid #ffffff; box-shadow: 0 0 0 2px #2741cc; background: #2741cc"></button>
+          <button aria-label="สีเขียว" style="width: 36px; height: 36px; border-radius: 50%; border: 0; background: #1b6f45"></button>
+          <button aria-label="สีแดงเลือดหมู" style="width: 36px; height: 36px; border-radius: 50%; border: 0; background: #8a2236"></button>
+          <button aria-label="เลือกสีเอง" style="width: 36px; height: 36px; border-radius: 50%; border: 1.5px dashed #9aa2b3; background: #ffffff; font: inherit; color: #5b6478">+</button>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <span style="font-size: 13px; font-weight: 500; color: #3a4256">รูปทรงจุด</span>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px">
+          <button style="font: inherit; font-size: 14px; border: 1.5px solid #c9ced8; background: #ffffff; color: #3a4256; border-radius: 999px; padding: 6px 14px; min-height: 36px">สี่เหลี่ยม</button>
+          <button style="font: inherit; font-size: 14px; border: 1.5px solid #1d2330; background: #1d2330; color: #ffffff; border-radius: 999px; padding: 6px 14px; min-height: 36px">มุมมน</button>
+          <button style="font: inherit; font-size: 14px; border: 1.5px solid #c9ced8; background: #ffffff; color: #3a4256; border-radius: 999px; padding: 6px 14px; min-height: 36px">วงกลม</button>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <label for="size-c" style="font-size: 13px; font-weight: 500; color: #3a4256">ขนาดไฟล์</label>
+          <select id="size-c" style="font: inherit; padding: 9px 10px; border: 1.5px solid #c9ced8; border-radius: 8px; background: #ffffff; color: #1d2330"><option>1024 px</option></select>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <span style="font-size: 13px; font-weight: 500; color: #3a4256">โลโก้ตรงกลาง</span>
+          <button style="font: inherit; padding: 9px 10px; border: 1.5px dashed #9aa2b3; border-radius: 8px; background: #ffffff; color: #3a4256">เลือกรูป</button>
+        </div>
+      </div>
+
+      <p style="margin: 0; font-size: 12px; color: #5b6478">ใส่โลโก้แล้ว ระบบเพิ่มระดับการแก้ไขข้อผิดพลาดเป็น H ให้อัตโนมัติ</p>
+    </section>
+
+    <button style="border: 0; background: transparent; font: inherit; color: #2741cc; min-height: 44px">ประเภทอื่น: Wi-Fi, อีเมล, นามบัตร</button>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

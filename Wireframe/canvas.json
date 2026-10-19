@@ -1,0 +1,33 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-10-19T13:30:00Z" },
+  "title": "QREASY V2 Wireframe",
+  "launch": { "view": "canvas", "page": "user" },
+  "pages": [
+    { "id": "user", "name": "ฝั่งผู้ใช้" },
+    { "id": "cms", "name": "CMS" }
+  ],
+  "boards": {
+    "Main.dc.html": { "x": 0, "y": 0, "w": 1440, "h": 900, "title": "หน้าแรก · เดสก์ท็อป", "expand": "fill", "page": "user" },
+    "Mobile.dc.html": { "x": 0, "y": 1020, "w": 390, "h": 844, "title": "หน้าแรก · มือถือ", "page": "user" },
+    "MobileCustomize.dc.html": { "x": 470, "y": 1020, "w": 390, "h": 844, "title": "มือถือ · เปิดปรับแต่ง", "page": "user" },
+    "MobileAfterDownload.dc.html": { "x": 940, "y": 1020, "w": 390, "h": 844, "title": "มือถือ · หลังดาวน์โหลด", "page": "user" },
+    "MoreTypes.dc.html": { "x": 1410, "y": 1020, "w": 390, "h": 844, "title": "มือถือ · ประเภทอื่น (Wi-Fi)", "page": "user" },
+    "CookieConsent.dc.html": { "x": 1880, "y": 1020, "w": 390, "h": 844, "title": "มือถือ · ขอความยินยอมคุกกี้", "page": "user" },
+    "Login.dc.html": { "x": 0, "y": 1984, "w": 390, "h": 844, "title": "เข้าสู่ระบบ", "page": "user" },
+    "Register.dc.html": { "x": 470, "y": 1984, "w": 390, "h": 844, "title": "สมัครสมาชิก", "page": "user" },
+    "VerifyEmail.dc.html": { "x": 940, "y": 1984, "w": 390, "h": 844, "title": "ยืนยันอีเมล", "page": "user" },
+    "Account.dc.html": { "x": 1410, "y": 1984, "w": 390, "h": 844, "title": "บัญชีของฉัน", "page": "user" },
+    "MyQr.dc.html": { "x": 0, "y": 2948, "w": 1440, "h": 900, "title": "QR ของฉัน · เดสก์ท็อป", "expand": "fill", "page": "user" },
+    "Faq.dc.html": { "x": 1520, "y": 2948, "w": 1440, "h": 1000, "title": "หน้าเนื้อหา · FAQ", "expand": "fill", "page": "user" },
+    "AdminTwoFA.dc.html": { "x": 0, "y": 0, "w": 1440, "h": 760, "title": "CMS · ยืนยันตัวตนสองชั้น", "expand": "fill", "page": "cms" },
+    "AdminOverview.dc.html": { "x": 1520, "y": 0, "w": 1440, "h": 900, "title": "CMS · ภาพรวม", "expand": "fill", "page": "cms" },
+    "AdminUsers.dc.html": { "x": 0, "y": 1020, "w": 1440, "h": 1040, "title": "CMS · ผู้ใช้", "expand": "fill", "page": "cms" },
+    "AdminAds.dc.html": { "x": 1520, "y": 1020, "w": 1440, "h": 1100, "title": "CMS · โฆษณาและ GA", "expand": "fill", "page": "cms" },
+    "AdminAffiliate.dc.html": { "x": 0, "y": 2240, "w": 1440, "h": 820, "title": "CMS · Affiliate", "expand": "fill", "page": "cms" },
+    "AdminAudit.dc.html": { "x": 1520, "y": 2240, "w": 1440, "h": 820, "title": "CMS · Audit Log", "expand": "fill", "page": "cms" }
+  },
+  "order": ["Main.dc.html", "Mobile.dc.html", "MobileCustomize.dc.html", "MobileAfterDownload.dc.html", "MoreTypes.dc.html", "CookieConsent.dc.html", "Login.dc.html", "Register.dc.html", "VerifyEmail.dc.html", "Account.dc.html", "MyQr.dc.html", "Faq.dc.html", "AdminTwoFA.dc.html", "AdminOverview.dc.html", "AdminUsers.dc.html", "AdminAds.dc.html", "AdminAffiliate.dc.html", "AdminAudit.dc.html"],
+  "notes": {},
+  "designSystems": []
+}

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>CMS Audit Log</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#2741cc}a:hover{color:#1a2f9e}
+td{padding:10px 14px;border-top:1px solid #e6e9ef;vertical-align:top}
+th{text-align:left;padding:10px 14px;font-size:12px;color:#5b6478;white-space:nowrap}
+</style>
+</helmet>
+<div style="min-height: 820px; box-sizing: border-box; background: #eef0f4; color: #1d2330; font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', system-ui, sans-serif; font-size: 15px; line-height: 1.6; display: flex; flex-direction: column">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 28px; background: #ffffff; border-bottom: 1.5px solid #dde1e8">
+    <span style="display: flex; align-items: center; gap: 10px">
+      <span aria-hidden="true" style="width: 20px; height: 20px; border: 3px solid #1d2330; border-radius: 3px; box-sizing: border-box; display: block"></span>
+      <span style="font-family: 'Bai Jamjuree', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: 0.04em">QREASY CMS</span>
+    </span>
+    <span style="display: flex; align-items: center; gap: 12px; font-size: 14px; color: #5b6478">admin@qreasy.info · Super Admin <button style="font: inherit; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 8px; padding: 6px 12px">ออกจากระบบ</button></span>
+  </header>
+
+  <div style="flex-grow: 1; display: flex; flex-wrap: wrap; gap: 24px; padding: 24px 28px 48px">
+    <nav aria-label="เมนู CMS" style="flex: 1 1 180px; max-width: 220px; display: flex; flex-direction: column; gap: 4px">
+      <a href="AdminOverview.dc.html" style="text-decoration: none; color: #3a4256; padding: 9px 14px; border-radius: 8px">ภาพรวม</a>
+      <a href="AdminUsers.dc.html" style="text-decoration: none; color: #3a4256; padding: 9px 14px; border-radius: 8px">ผู้ใช้</a>
+      <a href="AdminAds.dc.html" style="text-decoration: none; color: #3a4256; padding: 9px 14px; border-radius: 8px">โฆษณาและ GA</a>
+      <a href="AdminAffiliate.dc.html" style="text-decoration: none; color: #3a4256; padding: 9px 14px; border-radius: 8px">Affiliate</a>
+      <a href="#audit" aria-current="page" style="text-decoration: none; color: #ffffff; background: #1d2330; padding: 9px 14px; border-radius: 8px; font-weight: 600">Audit Log</a>
+    </nav>
+
+    <main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+      <div>
+        <h1 style="margin: 0; font-family: 'Bai Jamjuree', sans-serif; font-weight: 700; font-size: 30px">Audit Log</h1>
+        <p style="margin: 0; color: #5b6478">บันทึกทุกการกระทำใน CMS แก้ไขหรือลบไม่ได้ เก็บอย่างน้อย 1 ปี</p>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end">
+        <div style="flex: 1 1 200px; display: flex; flex-direction: column; gap: 4px">
+          <label for="a-actor" style="font-size: 13px; font-weight: 500">ผู้ทำ</label>
+          <select id="a-actor" style="font: inherit; padding: 9px 10px; border: 1.5px solid #c9ced8; border-radius: 8px; background: #ffffff; color: #1d2330"><option>ทุกคน</option></select>
+        </div>
+        <div style="flex: 1 1 200px; display: flex; flex-direction: column; gap: 4px">
+          <label for="a-act" style="font-size: 13px; font-weight: 500">การกระทำ</label>
+          <select id="a-act" style="font: inherit; padding: 9px 10px; border: 1.5px solid #c9ced8; border-radius: 8px; background: #ffffff; color: #1d2330"><option>ทั้งหมด</option></select>
+        </div>
+        <div style="flex: 1 1 200px; display: flex; flex-direction: column; gap: 4px">
+          <label for="a-date" style="font-size: 13px; font-weight: 500">ช่วงวันที่</label>
+          <select id="a-date" style="font: inherit; padding: 9px 10px; border: 1.5px solid #c9ced8; border-radius: 8px; background: #ffffff; color: #1d2330"><option>30 วันล่าสุด</option></select>
+        </div>
+      </div>
+
+      <div style="background: #ffffff; border: 1.5px solid #dde1e8; border-radius: 12px; overflow-x: auto">
+        <table style="width: 100%; min-width: 760px; border-collapse: collapse; font-size: 14px">
+          <thead><tr style="background: #f4f5f8"><th>เวลา</th><th>ผู้ทำ</th><th>การกระทำ</th><th>เป้าหมาย</th><th>รายละเอียด</th></tr></thead>
+          <tbody>
+            <tr><td>[วันที่ เวลา]</td><td>[อีเมลผู้ดูแล]</td><td style="font-family: 'IBM Plex Mono', monospace; font-size: 13px">user.suspend</td><td>[อีเมลผู้ใช้]</td><td>[เหตุผลที่ระงับ]</td></tr>
+            <tr><td>[วันที่ เวลา]</td><td>[อีเมลผู้ดูแล]</td><td style="font-family: 'IBM Plex Mono', monospace; font-size: 13px">settings.update</td><td>ads/ga</td><td>mobile_anchor off</td></tr>
+            <tr><td>[วันที่ เวลา]</td><td>[อีเมลผู้ดูแล]</td><td style="font-family: 'IBM Plex Mono', monospace; font-size: 13px">user.role</td><td>[อีเมลผู้ใช้]</td><td>member → admin</td></tr>
+            <tr><td>[วันที่ เวลา]</td><td>[อีเมลผู้ดูแล]</td><td style="font-family: 'IBM Plex Mono', monospace; font-size: 13px">affiliate.toggle</td><td>[ชื่อสินค้า]</td><td>off</td></tr>
+            <tr><td>[วันที่ เวลา]</td><td>[อีเมลผู้ดูแล]</td><td style="font-family: 'IBM Plex Mono', monospace; font-size: 13px">users.export_csv</td><td>ผู้ใช้ 120 รายการ</td><td>ตัวกรอง: สถานะ = ใช้งาน</td></tr>
+            <tr><td>[วันที่ เวลา]</td><td>[อีเมลผู้ดูแล]</td><td style="font-family: 'IBM Plex Mono', monospace; font-size: 13px">user.delete</td><td>[อีเมลผู้ใช้]</td><td>ลบโดยผู้ดูแล</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin: 0; font-size: 13px; color: #5b6478">Admin เห็นเฉพาะรายการของตัวเอง Super Admin เห็นทั้งหมด</p>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>เข้าสู่ระบบ มือถือ</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#2741cc}a:hover{color:#1a2f9e}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; overflow: hidden; background: #f6f7f9; color: #1d2330; font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', system-ui, sans-serif; font-size: 15px; line-height: 1.6; display: flex; flex-direction: column">
+  <header style="display: flex; align-items: center; justify-content: space-between; padding: 14px 16px">
+    <a href="Mobile.dc.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: #1d2330">
+      <span aria-hidden="true" style="width: 18px; height: 18px; border: 3px solid #1d2330; border-radius: 3px; box-sizing: border-box; display: block"></span>
+      <span style="font-family: 'Bai Jamjuree', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 0.04em">QREASY<span style="color: #2741cc">.INFO</span></span>
+    </a>
+  </header>
+
+  <main style="flex-grow: 1; display: flex; flex-direction: column; gap: 16px; padding: 24px 24px">
+    <h1 style="margin: 0; font-family: 'Bai Jamjuree', sans-serif; font-weight: 700; font-size: 30px">เข้าสู่ระบบ</h1>
+    <p style="margin: 0; font-size: 14px; color: #2741cc; background: #e2e7fc; border-radius: 8px; padding: 8px 12px">Login เพื่อบันทึก QR Code นี้ ข้อมูลที่กรอกไว้ยังอยู่ครบ</p>
+
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+      <button style="font: inherit; font-weight: 500; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 10px; padding: 11px 12px">Google</button>
+      <button style="font: inherit; font-weight: 500; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 10px; padding: 11px 12px">LINE</button>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 12px; font-size: 13px; color: #5b6478">
+      <span style="flex-grow: 1; height: 1px; background: #dde1e8"></span>หรือใช้อีเมล<span style="flex-grow: 1; height: 1px; background: #dde1e8"></span>
+    </div>
+
+    <form style="display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <label for="li-email" style="font-size: 14px; font-weight: 500">อีเมล</label>
+        <input id="li-email" type="email" placeholder="name@example.com" style="font: inherit; padding: 11px 14px; border: 1.5px solid #c9ced8; border-radius: 10px; background: #ffffff; color: #1d2330">
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <label for="li-pass" style="font-size: 14px; font-weight: 500">รหัสผ่าน</label>
+        <input id="li-pass" type="password" style="font: inherit; padding: 11px 14px; border: 1.5px solid #c9ced8; border-radius: 10px; background: #ffffff; color: #1d2330">
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+        <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; min-height: 44px"><input type="checkbox" style="width: 18px; height: 18px"> จดจำ 30 วัน</label>
+        <a href="#forgot" style="font-size: 14px">ลืมรหัสผ่าน?</a>
+      </div>
+      <button type="submit" style="font: inherit; font-weight: 600; font-size: 16px; color: #ffffff; background: #2741cc; border: 0; border-radius: 12px; padding: 13px 16px">เข้าสู่ระบบ</button>
+    </form>
+
+    <p style="margin: 0; text-align: center">ยังไม่มีบัญชี? <a href="Register.dc.html">สมัครสมาชิกฟรี</a></p>
+    <p style="margin: auto 0 0; font-size: 12px; color: #5b6478; text-align: center">ป้องกันบอทด้วย Turnstile · Login ผิด 5 ครั้งจะถูกพัก 15 นาที</p>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

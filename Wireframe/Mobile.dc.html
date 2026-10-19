@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Fast QR หน้าแรก มือถือ</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#2741cc}a:hover{color:#1a2f9e}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; overflow: hidden; background: #f6f7f9; color: #1d2330; font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', system-ui, sans-serif; font-size: 15px; line-height: 1.6; display: flex; flex-direction: column">
+  <header style="display: flex; align-items: center; justify-content: space-between; padding: 14px 16px">
+    <a href="#top" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: #1d2330">
+      <span aria-hidden="true" style="width: 18px; height: 18px; border: 3px solid #1d2330; border-radius: 3px; box-sizing: border-box; display: block"></span>
+      <span style="font-family: 'Bai Jamjuree', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 0.04em">QREASY<span style="color: #2741cc">.INFO</span></span>
+    </a>
+    <div style="display: flex; align-items: center; gap: 2px">
+      <button style="border: 0; background: transparent; font: inherit; color: #5b6478; min-width: 44px; min-height: 44px; border-radius: 6px">EN</button>
+      <a href="#login" style="text-decoration: none; color: #1d2330; font-weight: 500; padding: 10px 8px">เข้าสู่ระบบ</a>
+    </div>
+  </header>
+
+  <main style="flex-grow: 1; display: flex; flex-direction: column; gap: 18px; padding: 24px 20px 20px">
+    <div style="text-align: center; display: flex; flex-direction: column; gap: 6px">
+      <h1 style="margin: 0; font-family: 'Bai Jamjuree', sans-serif; font-weight: 700; font-size: 34px; line-height: 1.15; letter-spacing: -0.02em">QR Code ทันใจ</h1>
+      <p style="margin: 0; color: #5b6478; font-size: 15px">วางลิงก์หรือพิมพ์ข้อความ แล้วดาวน์โหลดได้เลย ฟรี ไม่ต้องสมัคร</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <label for="fast-m" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">ลิงก์หรือข้อความ</label>
+      <div style="position: relative">
+        <input id="fast-m" value="https://www.qreasy.info" placeholder="วางลิงก์ หรือพิมพ์ข้อความ" style="width: 100%; box-sizing: border-box; font: inherit; font-size: 17px; padding: 14px 52px 14px 16px; border: 1.5px solid #2741cc; border-radius: 14px; background: #ffffff; color: #1d2330">
+        <button aria-label="ล้างข้อความ" style="position: absolute; right: 4px; top: 4px; width: 44px; height: 44px; border: 0; border-radius: 50%; background: transparent; font: inherit; font-size: 22px; color: #5b6478">×</button>
+      </div>
+      <p style="margin: 0; text-align: center; font-size: 13px; color: #5b6478">ตรวจพบ: ลิงก์ (URL)</p>
+    </div>
+
+    <div style="display: flex; justify-content: center">
+      <div role="img" aria-label="ตัวอย่าง QR Code" style="width: 220px; height: 220px; position: relative; box-sizing: border-box; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 10px">
+        <div style="position: absolute; inset: 16px; background: repeating-linear-gradient(45deg, #e3e6ec 0 6px, transparent 6px 12px); border-radius: 4px"></div>
+        <div style="position: absolute; left: 16px; top: 16px; width: 52px; height: 52px; box-sizing: border-box; border: 8px solid #2a3142; background: #ffffff; display: flex; align-items: center; justify-content: center"><div style="width: 18px; height: 18px; background: #2a3142"></div></div>
+        <div style="position: absolute; right: 16px; top: 16px; width: 52px; height: 52px; box-sizing: border-box; border: 8px solid #2a3142; background: #ffffff; display: flex; align-items: center; justify-content: center"><div style="width: 18px; height: 18px; background: #2a3142"></div></div>
+        <div style="position: absolute; left: 16px; bottom: 16px; width: 52px; height: 52px; box-sizing: border-box; border: 8px solid #2a3142; background: #ffffff; display: flex; align-items: center; justify-content: center"><div style="width: 18px; height: 18px; background: #2a3142"></div></div>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; align-items: stretch; gap: 4px">
+      <button style="font: inherit; font-weight: 600; font-size: 17px; color: #ffffff; background: #2741cc; border: 0; border-radius: 12px; padding: 14px 20px">ดาวน์โหลด PNG</button>
+      <div style="display: flex; align-items: center; justify-content: center; gap: 2px; color: #5b6478">
+        <button style="border: 0; background: transparent; font: inherit; color: #3a4256; min-height: 44px; padding: 0 10px">SVG</button>
+        <span aria-hidden="true">·</span>
+        <button style="border: 0; background: transparent; font: inherit; color: #3a4256; min-height: 44px; padding: 0 10px">คัดลอกภาพ</button>
+        <span aria-hidden="true">·</span>
+        <button style="border: 0; background: transparent; font: inherit; color: #3a4256; min-height: 44px; padding: 0 10px">บันทึก</button>
+      </div>
+    </div>
+
+    <div style="border-top: 1px solid #dde1e8; padding-top: 8px; display: flex; flex-direction: column; align-items: center">
+      <button style="border: 0; background: transparent; font: inherit; color: #2741cc; min-height: 40px">ปรับแต่งสีและโลโก้ ▾</button>
+      <button style="border: 0; background: transparent; font: inherit; color: #2741cc; min-height: 40px">ประเภทอื่น: Wi-Fi, อีเมล, นามบัตร</button>
+    </div>
+
+    <aside aria-label="พื้นที่โฆษณา" style="margin-top: 24px; height: 100px; flex-shrink: 0; box-sizing: border-box; border: 1.5px dashed #c9ced8; border-radius: 8px; background: repeating-linear-gradient(45deg, #eceef3 0 8px, transparent 8px 16px); display: flex; flex-direction: column; align-items: center; justify-content: center; color: #5b6478; font-size: 13px">
+      <strong style="color: #3a4256; font-weight: 600">โฆษณา 320×100</strong>
+      <span>generator_below (อยู่ใต้ส่วนที่มองเห็นแรก)</span>
+    </aside>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

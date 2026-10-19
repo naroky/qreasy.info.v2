@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>QR ของฉัน เดสก์ท็อป</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#2741cc}a:hover{color:#1a2f9e}
+</style>
+</helmet>
+<div style="min-height: 900px; box-sizing: border-box; background: #f6f7f9; color: #1d2330; font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', system-ui, sans-serif; font-size: 15px; line-height: 1.6; display: flex; flex-direction: column">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 20px 40px">
+    <a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #1d2330">
+      <span aria-hidden="true" style="width: 20px; height: 20px; border: 3px solid #1d2330; border-radius: 3px; box-sizing: border-box; display: block"></span>
+      <span style="font-family: 'Bai Jamjuree', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 0.04em">QREASY<span style="color: #2741cc">.INFO</span></span>
+    </a>
+    <nav aria-label="บัญชี" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px">
+      <a href="Main.dc.html" style="text-decoration: none; color: #5b6478; padding: 8px 12px; border-radius: 8px">สร้าง QR</a>
+      <a href="#myqr" aria-current="page" style="text-decoration: none; color: #1d2330; font-weight: 600; padding: 8px 12px; border-radius: 8px; background: #e6e9ef">QR ของฉัน</a>
+      <a href="Account.dc.html" style="text-decoration: none; color: #5b6478; padding: 8px 12px; border-radius: 8px">บัญชี</a>
+      <button style="border: 0; background: transparent; font: inherit; color: #5b6478; padding: 8px 12px">ออกจากระบบ</button>
+    </nav>
+  </header>
+
+  <main style="width: 100%; max-width: 1120px; box-sizing: border-box; margin: 0 auto; padding: 32px 40px 64px; display: flex; flex-direction: column; gap: 24px">
+    <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px">
+      <div>
+        <h1 style="margin: 0; font-family: 'Bai Jamjuree', sans-serif; font-weight: 700; font-size: 36px">QR ของฉัน</h1>
+        <p style="margin: 0; color: #5b6478">บันทึกแล้ว 4 จาก 100 รายการ</p>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center">
+        <label for="q-search" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">ค้นหาตามชื่อ</label>
+        <input id="q-search" placeholder="ค้นหาตามชื่อ" style="font: inherit; padding: 9px 14px; border: 1.5px solid #c9ced8; border-radius: 10px; background: #ffffff; color: #1d2330; width: 220px">
+        <label for="q-type" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">ประเภท</label>
+        <select id="q-type" style="font: inherit; padding: 9px 12px; border: 1.5px solid #c9ced8; border-radius: 10px; background: #ffffff; color: #1d2330"><option>ทุกประเภท</option></select>
+        <a href="Main.dc.html" style="text-decoration: none; font-weight: 600; color: #ffffff; background: #2741cc; border-radius: 10px; padding: 10px 18px">+ สร้าง QR ใหม่</a>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px">
+      <article style="background: #ffffff; border: 1.5px solid #dde1e8; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px">
+        <div role="img" aria-label="ตัวอย่าง QR" style="height: 150px; border-radius: 8px; background: repeating-linear-gradient(45deg, #e3e6ec 0 6px, #ffffff 6px 12px); border: 1px solid #dde1e8"></div>
+        <div>
+          <h2 style="margin: 0; font-size: 16px; font-weight: 600">เว็บไซต์ร้าน</h2>
+          <p style="margin: 0; font-size: 13px; color: #5b6478">ลิงก์ · แก้ไข [วันที่]</p>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px">
+          <a href="Main.dc.html" style="text-decoration: none; font-size: 14px; font-weight: 600; color: #ffffff; background: #2741cc; border-radius: 8px; padding: 7px 12px">เปิดและแก้ไข</a>
+          <button style="font: inherit; font-size: 14px; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 8px; padding: 6px 12px">PNG</button>
+          <button style="font: inherit; font-size: 14px; color: #ab2238; background: #ffffff; border: 0; padding: 6px 8px">ลบ</button>
+        </div>
+      </article>
+      <article style="background: #ffffff; border: 1.5px solid #dde1e8; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px">
+        <div role="img" aria-label="ตัวอย่าง QR" style="height: 150px; border-radius: 8px; background: repeating-linear-gradient(45deg, #e3e6ec 0 6px, #ffffff 6px 12px); border: 1px solid #dde1e8"></div>
+        <div>
+          <h2 style="margin: 0; font-size: 16px; font-weight: 600">Wi-Fi หน้าร้าน</h2>
+          <p style="margin: 0; font-size: 13px; color: #5b6478">Wi-Fi · แก้ไข [วันที่]</p>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px">
+          <a href="MoreTypes.dc.html" style="text-decoration: none; font-size: 14px; font-weight: 600; color: #ffffff; background: #2741cc; border-radius: 8px; padding: 7px 12px">เปิดและแก้ไข</a>
+          <button style="font: inherit; font-size: 14px; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 8px; padding: 6px 12px">PNG</button>
+          <button style="font: inherit; font-size: 14px; color: #ab2238; background: #ffffff; border: 0; padding: 6px 8px">ลบ</button>
+        </div>
+      </article>
+      <article style="background: #ffffff; border: 1.5px solid #dde1e8; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px">
+        <div role="img" aria-label="ตัวอย่าง QR" style="height: 150px; border-radius: 8px; background: repeating-linear-gradient(45deg, #e3e6ec 0 6px, #ffffff 6px 12px); border: 1px solid #dde1e8"></div>
+        <div>
+          <h2 style="margin: 0; font-size: 16px; font-weight: 600">นามบัตร</h2>
+          <p style="margin: 0; font-size: 13px; color: #5b6478">นามบัตร · แก้ไข [วันที่]</p>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px">
+          <a href="MoreTypes.dc.html" style="text-decoration: none; font-size: 14px; font-weight: 600; color: #ffffff; background: #2741cc; border-radius: 8px; padding: 7px 12px">เปิดและแก้ไข</a>
+          <button style="font: inherit; font-size: 14px; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 8px; padding: 6px 12px">PNG</button>
+          <button style="font: inherit; font-size: 14px; color: #ab2238; background: #ffffff; border: 0; padding: 6px 8px">ลบ</button>
+        </div>
+      </article>
+      <article style="background: #ffffff; border: 1.5px solid #e9b7c1; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px">
+        <div role="img" aria-label="ตัวอย่าง QR" style="height: 150px; border-radius: 8px; background: repeating-linear-gradient(45deg, #e3e6ec 0 6px, #ffffff 6px 12px); border: 1px solid #dde1e8"></div>
+        <div>
+          <h2 style="margin: 0; font-size: 16px; font-weight: 600">เมนูร้าน</h2>
+          <p style="margin: 0; font-size: 13px; color: #5b6478">ลิงก์ · แก้ไข [วันที่]</p>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px">
+          <span style="font-size: 14px; color: #ab2238">ลบ QR นี้?</span>
+          <button style="font: inherit; font-size: 14px; color: #ffffff; background: #ab2238; border: 0; border-radius: 8px; padding: 7px 12px">ยืนยันการลบ</button>
+          <button style="font: inherit; font-size: 14px; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 8px; padding: 6px 12px">ยกเลิก</button>
+        </div>
+      </article>
+    </div>
+
+    <div style="border: 1.5px dashed #c9ced8; border-radius: 14px; padding: 24px; text-align: center; color: #5b6478; display: flex; flex-direction: column; gap: 6px; align-items: center">
+      <strong style="color: #3a4256">สถานะว่าง (ยังไม่มี QR ที่บันทึก)</strong>
+      <span>สร้าง QR แล้วกด "บันทึก" เพื่อเก็บไว้ที่นี่</span>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

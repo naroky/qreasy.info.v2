@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>ประเภทอื่น Wi-Fi มือถือ</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#2741cc}a:hover{color:#1a2f9e}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; overflow: hidden; background: #f6f7f9; color: #1d2330; font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', system-ui, sans-serif; font-size: 15px; line-height: 1.6; display: flex; flex-direction: column">
+  <header style="display: flex; align-items: center; justify-content: space-between; padding: 14px 16px">
+    <a href="#top" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: #1d2330">
+      <span aria-hidden="true" style="width: 18px; height: 18px; border: 3px solid #1d2330; border-radius: 3px; box-sizing: border-box; display: block"></span>
+      <span style="font-family: 'Bai Jamjuree', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 0.04em">QREASY<span style="color: #2741cc">.INFO</span></span>
+    </a>
+    <a href="#login" style="text-decoration: none; color: #1d2330; font-weight: 500; padding: 10px 8px">เข้าสู่ระบบ</a>
+  </header>
+
+  <main style="flex-grow: 1; display: flex; flex-direction: column; gap: 16px; padding: 4px 20px 20px">
+    <a href="Mobile.dc.html" style="align-self: flex-start; text-decoration: none; color: #2741cc; min-height: 44px; display: flex; align-items: center">← กลับไปแบบเร็ว</a>
+
+    <div role="tablist" aria-label="ประเภท QR" style="display: flex; flex-wrap: wrap; gap: 8px">
+      <button role="tab" aria-selected="false" style="font: inherit; font-size: 14px; border: 1.5px solid #c9ced8; background: #ffffff; color: #3a4256; border-radius: 999px; padding: 6px 14px; min-height: 36px">ลิงก์</button>
+      <button role="tab" aria-selected="false" style="font: inherit; font-size: 14px; border: 1.5px solid #c9ced8; background: #ffffff; color: #3a4256; border-radius: 999px; padding: 6px 14px; min-height: 36px">ข้อความ</button>
+      <button role="tab" aria-selected="true" style="font: inherit; font-size: 14px; border: 1.5px solid #1d2330; background: #1d2330; color: #ffffff; border-radius: 999px; padding: 6px 14px; min-height: 36px">Wi-Fi</button>
+      <button role="tab" aria-selected="false" style="font: inherit; font-size: 14px; border: 1.5px solid #c9ced8; background: #ffffff; color: #3a4256; border-radius: 999px; padding: 6px 14px; min-height: 36px">อีเมล</button>
+      <button role="tab" aria-selected="false" style="font: inherit; font-size: 14px; border: 1.5px solid #c9ced8; background: #ffffff; color: #3a4256; border-radius: 999px; padding: 6px 14px; min-height: 36px">เบอร์โทร</button>
+      <button role="tab" aria-selected="false" style="font: inherit; font-size: 14px; border: 1.5px solid #c9ced8; background: #ffffff; color: #3a4256; border-radius: 999px; padding: 6px 14px; min-height: 36px">SMS</button>
+      <button role="tab" aria-selected="false" style="font: inherit; font-size: 14px; border: 1.5px solid #c9ced8; background: #ffffff; color: #3a4256; border-radius: 999px; padding: 6px 14px; min-height: 36px">นามบัตร</button>
+    </div>
+
+    <form style="display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <label for="ssid" style="font-size: 14px; font-weight: 500">ชื่อเครือข่าย (SSID) *</label>
+        <input id="ssid" value="Cafe-Guest" style="font: inherit; padding: 11px 14px; border: 1.5px solid #c9ced8; border-radius: 10px; background: #ffffff; color: #1d2330">
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <label for="wpass" style="font-size: 14px; font-weight: 500">รหัสผ่าน</label>
+        <input id="wpass" value="••••••••" style="font: inherit; padding: 11px 14px; border: 1.5px solid #c9ced8; border-radius: 10px; background: #ffffff; color: #1d2330">
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: end">
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <label for="sec" style="font-size: 14px; font-weight: 500">การเข้ารหัส</label>
+          <select id="sec" style="font: inherit; padding: 10px; border: 1.5px solid #c9ced8; border-radius: 10px; background: #ffffff; color: #1d2330"><option>WPA/WPA2/WPA3</option></select>
+        </div>
+        <label style="display: flex; align-items: center; gap: 8px; min-height: 44px; font-size: 14px"><input type="checkbox" style="width: 18px; height: 18px"> เครือข่ายซ่อนอยู่</label>
+      </div>
+    </form>
+
+    <p style="margin: 0; font-size: 13px; color: #8f5300; background: #fbeed6; border-radius: 8px; padding: 8px 12px">รหัสผ่าน Wi-Fi อยู่ใน QR ใครสแกนก็เห็น</p>
+
+    <div style="display: flex; align-items: center; gap: 16px; margin-top: auto">
+      <div role="img" aria-label="พรีวิว QR Code Wi-Fi" style="width: 112px; height: 112px; flex-shrink: 0; position: relative; box-sizing: border-box; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 10px">
+        <div style="position: absolute; inset: 10px; background: repeating-linear-gradient(45deg, #e3e6ec 0 5px, transparent 5px 10px); border-radius: 4px"></div>
+        <div style="position: absolute; left: 10px; top: 10px; width: 28px; height: 28px; box-sizing: border-box; border: 5px solid #2a3142; background: #ffffff"></div>
+        <div style="position: absolute; right: 10px; top: 10px; width: 28px; height: 28px; box-sizing: border-box; border: 5px solid #2a3142; background: #ffffff"></div>
+        <div style="position: absolute; left: 10px; bottom: 10px; width: 28px; height: 28px; box-sizing: border-box; border: 5px solid #2a3142; background: #ffffff"></div>
+      </div>
+      <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 4px">
+        <button style="font: inherit; font-weight: 600; font-size: 16px; color: #ffffff; background: #2741cc; border: 0; border-radius: 12px; padding: 12px 16px">ดาวน์โหลด PNG</button>
+        <button style="border: 0; background: transparent; font: inherit; color: #2741cc; min-height: 40px">ปรับแต่งสีและโลโก้ ▾</button>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

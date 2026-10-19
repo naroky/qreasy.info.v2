@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>CMS Affiliate</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#2741cc}a:hover{color:#1a2f9e}
+td{padding:10px 14px;border-top:1px solid #e6e9ef;vertical-align:middle}
+th{text-align:left;padding:10px 14px;font-size:12px;color:#5b6478;white-space:nowrap}
+</style>
+</helmet>
+<div style="min-height: 820px; box-sizing: border-box; background: #eef0f4; color: #1d2330; font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', system-ui, sans-serif; font-size: 15px; line-height: 1.6; display: flex; flex-direction: column">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 28px; background: #ffffff; border-bottom: 1.5px solid #dde1e8">
+    <span style="display: flex; align-items: center; gap: 10px">
+      <span aria-hidden="true" style="width: 20px; height: 20px; border: 3px solid #1d2330; border-radius: 3px; box-sizing: border-box; display: block"></span>
+      <span style="font-family: 'Bai Jamjuree', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: 0.04em">QREASY CMS</span>
+    </span>
+    <span style="display: flex; align-items: center; gap: 12px; font-size: 14px; color: #5b6478">admin@qreasy.info · Super Admin <button style="font: inherit; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 8px; padding: 6px 12px">ออกจากระบบ</button></span>
+  </header>
+
+  <div style="flex-grow: 1; display: flex; flex-wrap: wrap; gap: 24px; padding: 24px 28px 48px">
+    <nav aria-label="เมนู CMS" style="flex: 1 1 180px; max-width: 220px; display: flex; flex-direction: column; gap: 4px">
+      <a href="AdminOverview.dc.html" style="text-decoration: none; color: #3a4256; padding: 9px 14px; border-radius: 8px">ภาพรวม</a>
+      <a href="AdminUsers.dc.html" style="text-decoration: none; color: #3a4256; padding: 9px 14px; border-radius: 8px">ผู้ใช้</a>
+      <a href="AdminAds.dc.html" style="text-decoration: none; color: #3a4256; padding: 9px 14px; border-radius: 8px">โฆษณาและ GA</a>
+      <a href="#affiliate" aria-current="page" style="text-decoration: none; color: #ffffff; background: #1d2330; padding: 9px 14px; border-radius: 8px; font-weight: 600">Affiliate</a>
+      <a href="AdminAudit.dc.html" style="text-decoration: none; color: #3a4256; padding: 9px 14px; border-radius: 8px">Audit Log</a>
+    </nav>
+
+    <main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px">
+        <div>
+          <h1 style="margin: 0; font-family: 'Bai Jamjuree', sans-serif; font-weight: 700; font-size: 30px">Affiliate</h1>
+          <p style="margin: 0; color: #5b6478">สินค้าที่แสดงหลังผู้ใช้ดาวน์โหลด QR ตามประเภทที่เลือก</p>
+        </div>
+        <button style="font: inherit; font-weight: 600; color: #ffffff; background: #2741cc; border: 0; border-radius: 10px; padding: 10px 18px">+ เพิ่มสินค้า</button>
+      </div>
+
+      <div style="background: #ffffff; border: 1.5px solid #dde1e8; border-radius: 12px; overflow-x: auto">
+        <table style="width: 100%; min-width: 780px; border-collapse: collapse; font-size: 14px">
+          <thead><tr style="background: #f4f5f8"><th>สินค้า</th><th>แพลตฟอร์ม</th><th>แสดงกับ QR ประเภท</th><th style="text-align: right">คลิก 30 วัน</th><th style="text-align: right">CTR</th><th>แสดง</th><th></th></tr></thead>
+          <tbody>
+            <tr><td>ป้ายตั้งโต๊ะอะคริลิก A6</td><td>Shopee</td><td>ลิงก์, Wi-Fi, ทุกประเภท</td><td style="text-align: right">[–]</td><td style="text-align: right">[–]</td><td><input type="checkbox" checked aria-label="แสดงป้ายตั้งโต๊ะ" style="width: 18px; height: 18px"></td><td><button style="font: inherit; font-size: 13px; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 8px; padding: 4px 12px">แก้ไข</button></td></tr>
+            <tr><td>สติกเกอร์ PVC กันน้ำ</td><td>Lazada</td><td>ลิงก์, ข้อความ</td><td style="text-align: right">[–]</td><td style="text-align: right">[–]</td><td><input type="checkbox" checked aria-label="แสดงสติกเกอร์" style="width: 18px; height: 18px"></td><td><button style="font: inherit; font-size: 13px; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 8px; padding: 4px 12px">แก้ไข</button></td></tr>
+            <tr><td>นามบัตร NFC</td><td>Shopee</td><td>นามบัตร, เบอร์โทร, อีเมล</td><td style="text-align: right">[–]</td><td style="text-align: right">[–]</td><td><input type="checkbox" checked aria-label="แสดงนามบัตร NFC" style="width: 18px; height: 18px"></td><td><button style="font: inherit; font-size: 13px; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 8px; padding: 4px 12px">แก้ไข</button></td></tr>
+            <tr><td>กระดาษสติกเกอร์สำหรับเครื่องพิมพ์</td><td>Lazada</td><td>ทุกประเภท</td><td style="text-align: right">[–]</td><td style="text-align: right">[–]</td><td><input type="checkbox" aria-label="แสดงกระดาษสติกเกอร์" style="width: 18px; height: 18px"></td><td><button style="font: inherit; font-size: 13px; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 8px; padding: 4px 12px">แก้ไข</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <section style="background: #ffffff; border: 1.5px solid #dde1e8; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
+        <h2 style="margin: 0; font-size: 17px; font-weight: 600">แก้ไขสินค้า</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px">
+          <div style="display: flex; flex-direction: column; gap: 4px"><label for="af-th" style="font-size: 13px; font-weight: 500">ชื่อ (ไทย)</label><input id="af-th" style="font: inherit; padding: 8px 10px; border: 1.5px solid #c9ced8; border-radius: 8px"></div>
+          <div style="display: flex; flex-direction: column; gap: 4px"><label for="af-en" style="font-size: 13px; font-weight: 500">ชื่อ (อังกฤษ)</label><input id="af-en" style="font: inherit; padding: 8px 10px; border: 1.5px solid #c9ced8; border-radius: 8px"></div>
+          <div style="display: flex; flex-direction: column; gap: 4px"><label for="af-url" style="font-size: 13px; font-weight: 500">ลิงก์ Affiliate (https, โดเมนที่อนุญาต)</label><input id="af-url" style="font: inherit; padding: 8px 10px; border: 1.5px solid #c9ced8; border-radius: 8px"></div>
+          <div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; font-weight: 500">รูปสินค้า</span><button style="font: inherit; padding: 8px 10px; border: 1.5px dashed #9aa2b3; border-radius: 8px; background: #ffffff; color: #3a4256">อัปโหลดรูป</button></div>
+        </div>
+        <div style="display: flex; gap: 8px"><button style="font: inherit; font-weight: 600; color: #ffffff; background: #2741cc; border: 0; border-radius: 8px; padding: 9px 18px">บันทึก</button><button style="font: inherit; color: #1d2330; background: #ffffff; border: 1.5px solid #c9ced8; border-radius: 8px; padding: 8px 16px">ยกเลิก</button></div>
+      </section>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
