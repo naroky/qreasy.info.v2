@@ -80,7 +80,7 @@ Cloud Scheduler ─► Cloud Run /internal/jobs   ลบบัญชีที่
 | Resend (นอก Google Cloud) | อีเมลแจ้งเตือน, ฟอร์ม Contact | 3,000 ฉบับต่อเดือน (100 ต่อวัน) | 0 บาท |
 | Cloudflare Turnstile (นอก Google Cloud) | กันบอท | ไม่จำกัด | 0 บาท |
 | Cloud DNS | DNS zone ของ `qreasy.info` (มีอยู่แล้ว) | ไม่มีโควต้าฟรี | ประมาณ 0.20 ดอลลาร์ต่อ zone ต่อเดือน (ราว 85–90 บาทต่อปี) บวกค่า query 0.40 ดอลลาร์ต่อล้านครั้ง ซึ่งแทบเป็นศูนย์ที่ traffic ระดับนี้ |
-| โดเมน `qreasy.info` | ต่ออายุรายปี | ไม่มี | รอคำตอบ BRD Q-18 |
+| โดเมน `qreasy.info` | ต่ออายุรายปี | ไม่มี | งบแยก 1,000 บาทต่อปี ไม่นับรวมในงบ Google Cloud 500 บาท (BRD Q-18) |
 
 **กฎกันงบบานปลาย**
 
