@@ -185,7 +185,7 @@ Cloud Scheduler ─► Cloud Run /internal/jobs   ลบบัญชีที่
 | --- | --- | --- |
 | TR-50 | redirect 301 จาก `/createqr` (GET) ไปยังหน้าแรก ส่วน POST ไปที่ `/createqr` ให้ตอบกลับด้วยหน้าแรกหรือ 303 See Other | BR-51 |
 | TR-51 | เก็บ favicon และชื่อแบรนด์ `QREASY.INFO` ไว้ตามเดิมจนกว่าจะมีแนวทางแบรนด์ใหม่ (Q-04) | BR-50 |
-| TR-52 | ย้าย GA4 property และ AdSense publisher ID เดิมมาใช้ เพื่อให้ข้อมูลต่อเนื่อง และใส่ค่าเริ่มต้นนี้ใน `site_settings` ตอน seed ฐานข้อมูล | BR-41, BR-90 |
+| TR-52 | ใช้บัญชี GA4 ที่เจ้าของมีอยู่ (ถ้า property เดียวกับ V1 ได้ ข้อมูลจะต่อเนื่อง) และใส่ Measurement ID ใน `site_settings` ตอน seed ส่วน AdSense ยังไม่มีบัญชี จึงเปิดเว็บได้โดยปิดโฆษณาไว้ (`ads_enabled = false`) แล้วค่อยใส่ publisher ID และ `ads.txt` ผ่าน CMS หลังบัญชีได้รับอนุมัติ ไม่ต้อง deploy ใหม่ | BR-41, BR-90 |
 
 ### 4.7 ระบบสมาชิกและการยืนยันตัวตน
 
@@ -550,7 +550,7 @@ qreasy.info.v2/
 | --- | --- |
 | ~~TQ-01~~ | ~~ใช้ hosting เจ้าไหน~~ — **ตัดสินแล้ว (6 พ.ย. 2026): Firebase Hosting + Cloud Run บน Google Cloud** |
 | ~~TQ-02~~ | ~~DNS ของ `qreasy.info` ปัจจุบันจัดการที่ไหน~~ — **ตอบแล้ว (6 พ.ย. 2026): อยู่ที่ Google Cloud (Cloud DNS)** ตอนเชื่อมโดเมนกับ Firebase Hosting ให้เพิ่ม record ที่ Firebase กำหนดใน zone นี้ ยังต้องยืนยันว่าบัญชีที่ดูแล DNS อยู่ใน billing account เดียวกับโปรเจกต์ (TQ-13) |
-| TQ-03 | มีสิทธิ์เข้าถึง GA4 property และบัญชี AdSense เดิมหรือไม่ และสร้าง service account สำหรับ GA4 Data API ได้หรือไม่ |
+| ~~TQ-03~~ | ~~มีสิทธิ์เข้าถึง GA4 property และบัญชี AdSense เดิมหรือไม่~~ — **ตอบแล้ว (6 พ.ย. 2026): มีบัญชี GA4 แล้ว ส่วน AdSense ยังไม่มี ต้องสมัครใหม่** (ดู TR-52) ยังต้องสร้าง service account แบบ read-only สำหรับ GA4 Data API |
 | TQ-04 | ใช้ Cloudflare Turnstile หรือ reCAPTCHA v3 |
 | TQ-05 | ใช้โดเมนผู้ส่งอีเมลอะไร (เช่น `no-reply@qreasy.info`) ทั้งกับอีเมลของ Firebase Authentication และ Resend (เลือกบริการแล้ว: Firebase Auth + Resend) |
 | TQ-06 | เลือก CMP สำหรับ Cookie Consent ตัวไหน ต้องเป็นตัวที่ Google รับรองถ้าจะแสดงโฆษณาให้ผู้ใช้ใน EEA/UK |
