@@ -559,7 +559,7 @@ qreasy.info.v2/
 | TQ-09 | ใครเป็นผู้ลงทะเบียน OAuth app กับ Google Cloud และ LINE Developers ในนามของเว็บไซต์ |
 | TQ-10 | Ezoic มีวิธีเชื่อมต่อหลายแบบ (เช่น ผ่าน nameserver หรือ Cloudflare) แบบใดเข้ากับ hosting และ CSP ที่เลือก หรือจะเลือกพาร์ตเนอร์ Google Ad Manager แทน |
 | TQ-11, TQ-12 | _(พักไว้พร้อม Phase 2)_ เลือก payment gateway และ Safe Browsing/Web Risk API |
-| TQ-13 | ใครเป็นเจ้าของ billing account และ Google Cloud project และใครได้รับ Budget Alert |
+| ~~TQ-13~~ | ~~ใครเป็นเจ้าของ billing account และใครได้รับ Budget Alert~~ — **ตอบแล้ว (6 พ.ย. 2026): เจ้าของผลิตภัณฑ์เป็นเจ้าของ billing account และเป็นผู้รับ Budget Alert** ทีมพัฒนาได้สิทธิ์ระดับ project เท่าที่จำเป็น ไม่ได้สิทธิ์จัดการ billing |
 | TQ-14 | ตรวจโควต้าฟรีและราคาล่าสุดของทุกบริการในหัวข้อ 2.1 กับหน้าราคาจริงก่อนเปิดใช้ โดยเฉพาะโควต้าฟรีของ Cloud Run ใน `asia-southeast1` และราคาของ Identity Platform |
 
 ## 15. ตารางอ้างอิง BR → TR
