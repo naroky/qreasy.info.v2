@@ -521,7 +521,7 @@ qreasy.info.v2/
 - Build image ใน GitHub Actions แล้ว push ไป Artifact Registry จากนั้น deploy Cloud Run ส่วน Firestore rules, indexes และ Hosting deploy ด้วย Firebase CLI
 - Preview ต่อ Pull Request: Firebase Hosting preview channel คู่กับ Cloud Run revision ที่ติด tag `pr-<เลข>` และไม่รับ traffic จริง ลบทิ้งเมื่อปิด PR ส่วน `main` deploy ไปยัง production
 - Firestore ไม่มี migration แบบ SQL ถ้าเปลี่ยนรูปแบบข้อมูล ต้องให้โค้ดอ่านข้อมูลรูปแบบเก่าได้ก่อน แล้วค่อยรัน script แปลงข้อมูล
-- Environment: แยก Firebase project เป็น `qreasy-dev` (ใช้กับ development และ preview) และ `qreasy-prod` แยก GA4 property, OAuth client และ email sender และปิดโฆษณาในทุก environment ที่ไม่ใช่ production
+- Environment: production ใช้ Google Cloud project เดิม `qreasy-3e34f` (มี DNS zone ของ `qreasy.info` อยู่แล้ว) ส่วน development และ preview ใช้ project แยก (เช่น `qreasy-dev`) แยก GA4 property, OAuth client และ email sender และปิดโฆษณาในทุก environment ที่ไม่ใช่ production
 
 ## 12. การติดตามระบบ (Monitoring)
 
