@@ -3,7 +3,7 @@
 | รายการ | รายละเอียด |
 | --- | --- |
 | เอกสาร | Technical Requirements Document — QREASY.INFO V2 |
-| สถานะ | Draft 0.5 (รอทีมพัฒนาและเจ้าของผลิตภัณฑ์ทบทวน) |
+| สถานะ | Draft 0.6 (รอทีมพัฒนาและเจ้าของผลิตภัณฑ์ทบทวน) |
 | วันที่ | 19 ตุลาคม 2026 (แก้ล่าสุด 6 พฤศจิกายน 2026) |
 | อ้างอิงข้อกำหนดธุรกิจ | [BRD/BRD-v2.md](../BRD/BRD-v2.md) |
 | ข้อมูลระบบเดิม | [v1/oldfeaturev1.md](../v1/oldfeaturev1.md) |
@@ -17,6 +17,7 @@
 | 0.3 | 19 ต.ค. 2026 | เพิ่ม Affiliate (click tracking), หลายเครือข่ายโฆษณาและ A/B test, แบนเนอร์ผู้สนับสนุน และข้อกำหนด Phase 2 (Dynamic QR, สถิติการสแกน, subscription และ payment) |
 | 0.4 | 19 ต.ค. 2026 | V2 เป็นบริการฟรี รายได้จากพื้นที่โฆษณาเท่านั้น ส่วนที่เป็น Phase 2 (หัวข้อ 4.13, ตาราง/API/event/NFR ที่ระบุ Phase 2) พักไว้และไม่อยู่ในขอบเขตการพัฒนา |
 | 0.5 | 6 พ.ย. 2026 | เปลี่ยนสถาปัตยกรรมมาใช้ Google Cloud ภายใต้งบ 500 บาทต่อปี: Firebase Hosting + Cloud Run + Firestore + Firebase Authentication แทน Vercel, PostgreSQL, Redis และ Better Auth เพิ่มหัวข้อ 2.1 งบประมาณและโควต้าฟรี |
+| 0.6 | 6 พ.ย. 2026 | Login ด้วย Google อย่างเดียว: ตัดการสมัครด้วยอีเมล/รหัสผ่าน, LINE และข้อกำหนดเรื่องรหัสผ่าน (TR-60, 61, 63, 65, 66, 67, 69, 86) ใช้ Firebase Authentication แบบปกติโดยไม่ต้องอัปเกรดเป็น Identity Platform เปลี่ยน 2FA ของ Admin เป็น TOTP ที่แอปจัดการเอง และเพิ่มการรับมือเบราว์เซอร์ในแอปที่ Google บล็อกการ Login |
 
 > **ขอบเขตการพัฒนาปัจจุบัน:** ทุกข้อที่ระบุว่า "Phase 2" ในเอกสารนี้**พักไว้** ทีมพัฒนาไม่ต้องทำ เก็บไว้เพื่ออ้างอิงเท่านั้น (ดู BRD หัวข้อ 3.2 และ 6.12)
 
@@ -36,7 +37,7 @@
 ```text
 ผู้ใช้ (เบราว์เซอร์)
  │   ในเบราว์เซอร์: QR Engine (client-side), AdSense / GA4 (หลัง consent),
- │   Firebase Auth SDK (เฉพาะ Login ด้วย Google และการ sign-in ด้วย custom token ของ LINE)
+ │   Firebase Auth SDK (เฉพาะปุ่ม Login ด้วย Google)
  ▼
 Firebase Hosting (CDN + SSL ของ www.qreasy.info)
  ├─ หน้าสาธารณะ: ไฟล์ static หรือ response ที่ cache ไว้ ─► ส่งจาก CDN ทันที ไม่ปลุก Cloud Run
@@ -45,7 +46,7 @@ Firebase Hosting (CDN + SSL ของ www.qreasy.info)
           ▼
      Cloud Run: Next.js server (min 0 / max 2 instances, asia-southeast1)
           ├─► Cloud Firestore         ข้อมูลสมาชิก, QR ที่บันทึก, ค่าตั้งค่า, Audit Log, ตัวนับคลิก
-          ├─► Firebase Auth / Identity Platform   อีเมล, Google, LINE (custom token), TOTP 2FA, session cookie
+          ├─► Firebase Authentication  Login ด้วย Google และ session cookie (2FA ของ Admin ตรวจในแอป)
           ├─► Cloud Storage           โลโก้ที่บันทึก, รูปสินค้า Affiliate
           ├─► Secret Manager          secret และ API key
           ├─► GA4 Data API            ตัวเลขใน Dashboard
@@ -70,7 +71,7 @@ Cloud Scheduler ─► Cloud Run /internal/jobs   ลบบัญชีที่
 | Firebase Hosting | หน้าเว็บสาธารณะ, CDN, SSL, โดเมน | พื้นที่ 10 GB, transfer 360 MB ต่อวัน | 0 บาท ถ้าเกินคิดประมาณ 0.15 ดอลลาร์ต่อ GB (360 MB ต่อวันรองรับผู้เข้าชมใหม่ราว 1,500–2,000 คนต่อวัน) |
 | Cloud Run | Next.js server: หน้าสมาชิก, CMS, API, `/go/*` | 2 ล้าน request, 180,000 vCPU-วินาที, 360,000 GiB-วินาทีต่อเดือน | 0 บาท |
 | Cloud Firestore | ฐานข้อมูล | เก็บ 1 GiB, อ่าน 50,000, เขียน 20,000, ลบ 20,000 ครั้งต่อวัน | 0 บาท |
-| Firebase Auth / Identity Platform | Login และ 2FA | อีเมล, Google และ custom token ประมาณ 50,000 ผู้ใช้ต่อเดือน (MAU) ส่วน OIDC/SAML ประมาณ 50 MAU | 0 บาท เพราะ LINE ใช้ custom token ไม่ใช้ OIDC (TR-63) |
+| Firebase Authentication | Login ด้วย Google | Login ด้วย Google ไม่มีค่าใช้จ่าย โดยไม่ต้องอัปเกรดเป็น Identity Platform | 0 บาท |
 | Cloud Storage | โลโก้, รูปสินค้า, ไฟล์ backup | 5 GB ฟรีเฉพาะ region ในสหรัฐฯ ส่วน `asia-southeast1` คิดตามจริง | ไม่ถึง 5 บาทต่อเดือน ถ้าใช้ไม่เกิน 1–2 GB |
 | Secret Manager | เก็บ secret | 6 secret version, 10,000 ครั้งต่อเดือน | 0 บาท |
 | Cloud Scheduler | job รายวัน 2 ตัว | 3 job ต่อ billing account | 0 บาท |
@@ -104,13 +105,13 @@ Cloud Scheduler ─► Cloud Run /internal/jobs   ลบบัญชีที่
 | Validation | `zod` | ใช้ schema เดียวกันทั้งฝั่ง client และ server |
 | Database | Cloud Firestore (Native mode, region `asia-southeast1`) | อยู่ในโควต้าฟรี ไม่มีค่าใช้จ่ายขั้นต่ำเหมือน Cloud SQL |
 | Data access | Firebase Admin SDK ฝั่ง server + `zod` ตรวจรูปแบบข้อมูลก่อนเขียน | Firestore ไม่มี schema จึงต้องตรวจข้อมูลในโค้ด และเบราว์เซอร์ไม่เขียน Firestore โดยตรง |
-| Authentication | Firebase Authentication (อัปเกรดเป็น Identity Platform) | รองรับอีเมล/รหัสผ่าน, Google, LINE (ผ่าน custom token), TOTP 2FA, session cookie และ email enumeration protection |
-| Password hashing | จัดการโดย Firebase Authentication (scrypt) | ระบบไม่เก็บรหัสผ่านเอง |
+| Authentication | Firebase Authentication (Google provider อย่างเดียว) | Login ด้วยบัญชี Google และใช้ session cookie ของ Admin SDK ระบบไม่มีรหัสผ่านของตัวเอง |
+| 2FA ของ Admin | TOTP ที่แอปจัดการเอง (`otplib`) + recovery code | ไม่ต้องพึ่งการอัปเกรดเป็น Identity Platform และมี recovery code ให้ใช้ |
 | Rate limit | ตัวนับใน Firestore (มี TTL) + Turnstile | ไม่ใช้ Redis เพื่อไม่ให้เกินงบ |
 | File storage | Cloud Storage (`asia-southeast1`) ผ่าน signed URL | เก็บโลโก้ของ QR ที่บันทึก รูปโปรไฟล์ และรูปสินค้า Affiliate |
-| Email | อีเมลยืนยันตัวตนและรีเซ็ตรหัสผ่านใช้ระบบอีเมลของ Firebase Authentication ส่วนอีเมลแจ้งเตือนและฟอร์ม Contact ใช้ Resend (แพ็กเกจฟรี) พร้อมตั้งค่า SPF/DKIM/DMARC | Firebase ส่งอีเมล auth ให้โดยไม่เสียเงิน Resend ใช้กับอีเมลที่เหลือ |
+| Email | Resend (แพ็กเกจฟรี) พร้อมตั้งค่า SPF/DKIM/DMARC ใช้กับฟอร์ม Contact และอีเมลแจ้งผู้ใช้ เช่น ยืนยันการลบบัญชี | ระบบไม่ต้องส่งอีเมลยืนยันตัวตนหรือรีเซ็ตรหัสผ่าน เพราะ Login ด้วย Google |
 | Hosting | Firebase Hosting (CDN, SSL, โดเมน) + Cloud Run | อยู่ในโควต้าฟรี และไม่ต้องใช้ Load Balancer |
-| Secrets | Google Secret Manager | เก็บ secret ของ LINE, Resend, Turnstile และ encryption key |
+| Secrets | Google Secret Manager | เก็บ API key ของ Resend และ Turnstile และ encryption key |
 | Bot protection | Cloudflare Turnstile หรือ reCAPTCHA v3 | ผู้ใช้ไม่ต้องคลิกยืนยัน |
 | Consent | CMP ที่ Google รับรอง + Google Consent Mode v2 | สอดคล้องกับ PDPA และนโยบาย AdSense |
 | เครือข่ายโฆษณา | Google AdSense (หลัก), Ezoic หรือ Google Ad Manager ผ่านพาร์ตเนอร์ MCM (ทดสอบ A/B) | เริ่มจาก AdSense แล้ววัดผลก่อนเปลี่ยน |
@@ -191,16 +192,17 @@ Cloud Scheduler ─► Cloud Run /internal/jobs   ลบบัญชีที่
 
 | รหัส | ข้อกำหนด | อ้างอิง |
 | --- | --- | --- |
-| TR-60 | สมัครด้วยอีเมลและรหัสผ่านผ่าน server action ซึ่งตรวจ Turnstile, ตรวจความยาวรหัสผ่าน 8–128 ตัวอักษร และตรวจกับรายการรหัสผ่านที่เคยรั่วไหล (HIBP k-anonymity API) ก่อนสร้างบัญชีด้วย Admin SDK (`createUser`) การ hash รหัสผ่านเป็นหน้าที่ของ Firebase Authentication | BR-60 |
-| TR-61 | ส่งลิงก์ยืนยันอีเมลด้วยระบบอีเมลของ Firebase Authentication (template ภาษาไทยและอังกฤษ ลิงก์ใช้ได้ครั้งเดียว) ก่อนยืนยันจะ Login ได้ แต่ใช้ฟีเจอร์สมาชิกไม่ได้ และขอส่งซ้ำได้ไม่เกิน 3 ครั้งต่อชั่วโมง (นับใน `rate_limits`) | BR-60 |
-| TR-62 | Login ด้วย Google ผ่าน Firebase Auth SDK ในเบราว์เซอร์ แล้วส่ง ID token ไปที่ `POST /api/session` ตั้งค่า "One account per email address" และถ้าเจอ `auth/account-exists-with-different-credential` ให้เชื่อมบัญชีด้วย `linkWithCredential` หลังผู้ใช้ยืนยันรหัสผ่านเดิม | BR-61 |
-| TR-63 | Login ด้วย LINE Login v2.1: server จัดการ OAuth กับ LINE เอง แล้วสร้าง Firebase custom token (`createCustomToken`, uid = `line:<LINE user id>`) ให้เบราว์เซอร์ใช้ sign-in ห้ามต่อ LINE ผ่าน OIDC provider ของ Identity Platform เพราะโควต้าฟรีของ OIDC มีประมาณ 50 MAU ถ้า LINE ไม่ส่งอีเมลกลับมา ให้ขออีเมลจากผู้ใช้และยืนยันก่อนเปิดใช้งาน | BR-62 |
+| ~~TR-60~~ | ~~สมัครด้วยอีเมลและรหัสผ่าน~~ — ตัดออกใน 0.6 (Login ด้วย Google อย่างเดียว) | ~~BR-60~~ |
+| ~~TR-61~~ | ~~ส่งลิงก์ยืนยันอีเมล~~ — ตัดออกใน 0.6 (Google ยืนยันอีเมลให้แล้ว) | ~~BR-60~~ |
+| TR-62 | Login ด้วย Google ผ่าน Firebase Auth SDK ในเบราว์เซอร์ (`signInWithPopup` บนเดสก์ท็อป และ `signInWithRedirect` บนมือถือ) แล้วส่ง ID token ไปที่ `POST /api/session` ถ้าเป็นการ Login ครั้งแรก ให้สร้างเอกสาร `users/{uid}` แล้วแสดงหน้ายอมรับ Terms และ Privacy Policy ก่อนใช้ฟีเจอร์สมาชิก (TR-68) | BR-61, BR-69 |
+| ~~TR-63~~ | ~~Login ด้วย LINE~~ — ตัดออกใน 0.6 | ~~BR-62~~ |
+| TR-63a | ถ้าตรวจ user agent แล้วพบว่าเปิดอยู่ในเบราว์เซอร์ในแอป (เช่น LINE, Facebook, Instagram) ซึ่ง Google บล็อกการ Login (`disallowed_useragent`) ให้ซ่อนปุ่ม Login และแสดงคำแนะนำให้เปิดลิงก์ใน Chrome หรือ Safari พร้อมปุ่มคัดลอกลิงก์ ส่วนการสร้างและดาวน์โหลด QR ยังใช้ได้ตามปกติ | BR-61 |
 | TR-64 | Session ใช้ Firebase session cookie (`createSessionCookie`) แบบ `HttpOnly`, `Secure`, `SameSite=Lax` อายุ 1 วัน ถ้าเลือก "จดจำการเข้าสู่ระบบ" จะเป็น 14 วัน (สูงสุดที่ Firebase รองรับ) และตรวจด้วย `verifySessionCookie(cookie, checkRevoked=true)` ทุก request ของหน้าสมาชิกและ CMS | BR-63 |
-| TR-65 | รีเซ็ตรหัสผ่านด้วยระบบของ Firebase Authentication โดยเปิด email enumeration protection ไว้ ระบบต้องตอบกลับเหมือนกันไม่ว่าอีเมลนั้นมีบัญชีหรือไม่ และหลังรีเซ็ตให้เรียก `revokeRefreshTokens` เพื่อยกเลิก session อื่นทั้งหมด | BR-63 |
-| TR-66 | Login ด้วยอีเมลทำผ่าน server action ที่เรียก Identity Toolkit REST API (`signInWithPassword`) เพื่อให้ server ตรวจ Turnstile และจำกัดการ Login ผิด 5 ครั้งต่อบัญชีต่อ 15 นาที และ 20 ครั้งต่อ IP ต่อ 15 นาที ด้วยตัวนับใน `rate_limits` เมื่อเกินให้หน่วงเวลาและบังคับ Turnstile | BR-70 |
-| TR-67 | หน้าสมัครสมาชิก Login และลืมรหัสผ่านใช้ Turnstile/reCAPTCHA v3 ตรวจฝั่ง server | BR-70 |
+| ~~TR-65~~ | ~~รีเซ็ตรหัสผ่าน~~ — ตัดออกใน 0.6 (ไม่มีรหัสผ่านในระบบ) | ~~BR-63~~ |
+| ~~TR-66~~ | ~~จำกัดการ Login ผิด~~ — ตัดออกใน 0.6 Google จัดการเรื่องการเดารหัสผ่านเอง ส่วน `POST /api/session` ยังจำกัด 30 ครั้งต่อ IP ต่อ 15 นาที (นับใน `rate_limits`) | BR-70 |
+| ~~TR-67~~ | ~~Turnstile ในหน้าสมัครและ Login~~ — ตัดออกใน 0.6 Turnstile ใช้กับฟอร์ม Contact เท่านั้น (TR-34) | BR-70 |
 | TR-68 | บันทึกการยอมรับ Terms และ Privacy Policy (เวอร์ชันเอกสาร และเวลา) และค่า opt-in ของอีเมลข่าวสารไว้ในตาราง `consents` | BR-69 |
-| TR-69 | ส่งอีเมลแจ้งเตือนเมื่อเปลี่ยนรหัสผ่าน เปลี่ยนอีเมล (ส่งไปทั้งอีเมลเก่าและใหม่) หรือเพิ่ม/ลบวิธี Login | BR-71 |
+| ~~TR-69~~ | ~~อีเมลแจ้งเตือนเมื่อเปลี่ยนรหัสผ่านหรืออีเมล~~ — ตัดออกใน 0.6 (Google แจ้งเตือนเอง) | ~~BR-71~~ |
 
 ### 4.8 ฟีเจอร์ของสมาชิก
 
@@ -212,7 +214,7 @@ Cloud Scheduler ─► Cloud Run /internal/jobs   ลบบัญชีที่
 | TR-73 | ถ้าเป็น QR ประเภท Wi-Fi ให้เตือนว่ารหัสผ่านจะถูกบันทึก และมีตัวเลือก "ไม่บันทึกรหัสผ่าน" | BR-64, R-07 |
 | TR-74 | Preset เก็บเฉพาะการตั้งค่าการแสดงผล (ไม่มี payload) จำกัด 20 รายการต่อบัญชี | BR-65 |
 | TR-75 | โลโก้ที่สมาชิกบันทึกและรูปโปรไฟล์ อัปโหลดไป Cloud Storage (`asia-southeast1`) ผ่าน signed URL ที่ server ออกให้ ตรวจ MIME type และขนาดฝั่ง server, strip metadata (EXIF) และ sanitize SVG | BR-64, BR-66 |
-| TR-76 | การลบบัญชีต้องยืนยันด้วยรหัสผ่านหรือ re-auth ผ่าน OAuth แล้ว soft delete ทันที (Login ไม่ได้) และ hard delete ข้อมูลส่วนบุคคล ไฟล์ และ QR หลังพ้นช่วงเวลาที่กำหนดใน Q-09 (ค่าเริ่มต้น 30 วัน) | BR-67 |
+| TR-76 | การลบบัญชีต้องยืนยันด้วยการ Login Google ซ้ำ (re-authentication ภายใน 5 นาที) แล้ว soft delete ทันที (Login ไม่ได้) และ hard delete ข้อมูลส่วนบุคคล ไฟล์ และ QR หลังพ้นช่วงเวลาที่กำหนดใน Q-09 (ค่าเริ่มต้น 30 วัน) | BR-67 |
 | TR-77 | ส่งออกข้อมูลส่วนตัวเป็นไฟล์ JSON (โปรไฟล์, QR ที่บันทึก, preset, consents) ผ่านลิงก์ดาวน์โหลดที่หมดอายุภายใน 24 ชั่วโมง | BR-68 |
 
 ### 4.9 CMS — การจัดการผู้ใช้
@@ -220,12 +222,12 @@ Cloud Scheduler ─► Cloud Run /internal/jobs   ลบบัญชีที่
 | รหัส | ข้อกำหนด | อ้างอิง |
 | --- | --- | --- |
 | TR-80 | CMS อยู่ที่ `/admin` ตรวจ role ฝั่ง server ทุก request (middleware + ทุก server action) ห้ามพึ่งการซ่อนเมนูฝั่ง client อย่างเดียว | BR-75 |
-| TR-81 | Admin และ Super Admin ต้องลงทะเบียน 2FA แบบ TOTP ของ Identity Platform ถ้ายังไม่ลงทะเบียนจะเข้า `/admin` ไม่ได้ Firebase ไม่มี recovery code จึงให้ Super Admin รีเซ็ต 2FA ของ Admin ได้ผ่าน Admin SDK (บันทึก Audit Log) ส่วน 2FA ของ Super Admin รีเซ็ตได้ผ่าน script เท่านั้น session ของ CMS มีอายุสูงสุด 8 ชั่วโมง และหมดอายุเมื่อไม่ใช้งาน 30 นาที | BR-85 |
+| TR-81 | หลัง Login ด้วย Google แล้ว Admin และ Super Admin ต้องกรอกรหัส TOTP 6 หลักก่อนเข้า `/admin` โดยแอปจัดการ TOTP เอง (`otplib`, secret เข้ารหัสใน `admin_mfa/{uid}`) ตอนลงทะเบียนครั้งแรกให้ recovery code 10 ชุด (เก็บแบบ hash ใช้ได้ครั้งเดียว) ถ้ายังไม่ลงทะเบียนจะเข้า `/admin` ไม่ได้ Super Admin รีเซ็ต 2FA ของ Admin ได้ (บันทึก Audit Log) ส่วน 2FA ของ Super Admin รีเซ็ตได้ผ่าน script เท่านั้น จำกัดการกรอกรหัสผิด 5 ครั้งต่อ 15 นาที session ของ CMS มีอายุสูงสุด 8 ชั่วโมง และหมดอายุเมื่อไม่ใช้งาน 30 นาที | BR-85 |
 | TR-82 | รายการผู้ใช้แบ่งหน้าด้วย cursor ของ Firestore (`startAfter`, 25/50/100 ต่อหน้า) ค้นหาแบบขึ้นต้นด้วย (prefix) จากฟิลด์ `email_lower` และ `name_lower` และกรองตาม status, role, provider, ช่วงวันที่สมัคร และ Login ล่าสุด โดยสร้าง composite index ที่ต้องใช้ ข้อจำกัด: ค้นหาคำที่อยู่กลางชื่อหรืออีเมลไม่ได้ | BR-76 |
-| TR-83 | หน้ารายละเอียดผู้ใช้แสดงข้อมูลโปรไฟล์, วิธี Login ที่ผูกไว้, สถานะยืนยันอีเมล, วันที่สมัคร, Login ล่าสุด, จำนวน QR, session ที่ใช้งานอยู่ และ Audit Log ที่เกี่ยวกับผู้ใช้นั้น โดยไม่แสดงเนื้อหา payload ของ QR | BR-77 |
+| TR-83 | หน้ารายละเอียดผู้ใช้แสดงข้อมูลโปรไฟล์, อีเมลของบัญชี Google, วันที่สมัคร, Login ล่าสุด, จำนวน QR, session ที่ใช้งานอยู่ และ Audit Log ที่เกี่ยวกับผู้ใช้นั้น โดยไม่แสดงเนื้อหา payload ของ QR | BR-77 |
 | TR-84 | การระงับผู้ใช้จะเปลี่ยน `status = suspended` บันทึกเหตุผล ตั้ง `disabled: true` ใน Firebase Authentication และเรียก `revokeRefreshTokens` ทันที ผู้ใช้ที่ถูกระงับ Login ไม่ได้และเห็นข้อความแจ้งพร้อมช่องทางติดต่อ | BR-78 |
 | TR-85 | การลบผู้ใช้โดย Admin ต้องพิมพ์อีเมลของผู้ใช้เพื่อยืนยัน และใช้กระบวนการเดียวกับ TR-76 Admin ลบหรือระงับบัญชีที่มี role เท่ากันหรือสูงกว่าตัวเองไม่ได้ | BR-79 |
-| TR-86 | Admin ส่งอีเมลยืนยันหรือรีเซ็ตรหัสผ่านซ้ำได้ (ใช้ rate limit เดียวกับ TR-61, TR-65) ห้ามมี API ที่อ่านหรือกำหนดรหัสผ่านของผู้ใช้ | BR-80 |
+| ~~TR-86~~ | ~~Admin ส่งอีเมลยืนยันหรือรีเซ็ตรหัสผ่านซ้ำ~~ — ตัดออกใน 0.6 | ~~BR-80~~ |
 | TR-87 | ปุ่ม "Logout ทุกอุปกรณ์" เรียก `revokeRefreshTokens` ทำให้ session cookie ทุกตัวของผู้ใช้ใช้ไม่ได้ทันที (เพราะตรวจด้วย `checkRevoked=true` ตาม TR-64) | BR-81 |
 | TR-88 | Super Admin เปลี่ยน role ได้ ระบบต้องมี Super Admin อย่างน้อย 1 คนเสมอ และ Super Admin คนแรกสร้างผ่าน CLI/seed script เท่านั้น ห้ามสร้างผ่านหน้าเว็บ | BR-82 |
 | TR-89 | ทุก mutation ใน CMS บันทึกลงตาราง `audit_logs` (actor, action, target, ค่าก่อน/หลังที่ตัดข้อมูลอ่อนไหวออกแล้ว, IP, user agent, เวลา) แบบ append-only ห้ามแก้หรือลบผ่านแอป และเก็บไว้อย่างน้อย 1 ปี | BR-83 |
@@ -295,11 +297,11 @@ Cloud Scheduler ─► Cloud Run /internal/jobs   ลบบัญชีที่
 
 ## 5. Data Model (เบื้องต้น) — Cloud Firestore
 
-ข้อมูลเก็บใน Cloud Firestore (Native mode) แต่ละแถวด้านล่างคือ collection หรือเอกสาร ส่วนข้อมูลบัญชีหลัก (อีเมล, รหัสผ่าน, ผู้ให้บริการ Login, 2FA, session) อยู่ใน Firebase Authentication และอ้างถึงด้วย `uid` ชื่อ "ตาราง" ในหัวข้ออื่นของเอกสารนี้หมายถึง collection ชื่อเดียวกัน
+ข้อมูลเก็บใน Cloud Firestore (Native mode) แต่ละแถวด้านล่างคือ collection หรือเอกสาร ส่วนข้อมูลบัญชีหลัก (บัญชี Google ที่ผูกไว้และ session) อยู่ใน Firebase Authentication และอ้างถึงด้วย `uid` ชื่อ "ตาราง" ในหัวข้ออื่นของเอกสารนี้หมายถึง collection ชื่อเดียวกัน
 
 | Collection / Document | ฟิลด์หลัก | หมายเหตุ |
 | --- | --- | --- |
-| `users/{uid}` | email, email_lower, name, name_lower, image_path, locale, role (`member`/`admin`/`super_admin`), status (`active`/`suspended`/`pending_deletion`), suspended_reason, providers (array), marketing_opt_in, last_login_at, created_at, updated_at, delete_after | role ตั้งเป็น custom claim ใน Firebase Auth ด้วย เพื่อตรวจสิทธิ์โดยไม่ต้องอ่าน Firestore |
+| `users/{uid}` | email, email_lower, name, name_lower, image_path, locale, role (`member`/`admin`/`super_admin`), status (`active`/`suspended`/`pending_deletion`), suspended_reason, marketing_opt_in, terms_accepted_version, last_login_at, created_at, updated_at, delete_after | role ตั้งเป็น custom claim ใน Firebase Auth ด้วย เพื่อตรวจสิทธิ์โดยไม่ต้องอ่าน Firestore |
 | `users/{uid}/qr_codes/{id}` | name, name_lower, type, payload (encrypted), style (map), logo_path, created_at, updated_at | sub-collection ทำให้จำกัดการเข้าถึงเฉพาะเจ้าของได้ง่าย |
 | `users/{uid}/qr_presets/{id}` | name, style (map), logo_path, created_at | |
 | `users/{uid}/consents/{id}` | kind (`terms`/`privacy`/`marketing`), version, granted, created_at | append-only |
@@ -312,7 +314,8 @@ Cloud Scheduler ─► Cloud Run /internal/jobs   ลบบัญชีที่
 | `sponsor_banner_daily/{bannerId}_{date}` | banner_id, date, clicks | impression ดูจาก GA4 |
 | `experiments/{key}` | variants (array: name, weight, config), status, starts_at, ends_at, winner | |
 | `experiment_revenue/{id}` | experiment_key, variant, date, revenue_thb, source | Admin กรอกหรือนำเข้าจากรายงานของ provider |
-| `rate_limits/{key}` | count, expires_at | ตัวนับของ TR-34, TR-61, TR-66 ตั้ง TTL policy ที่ `expires_at` |
+| `rate_limits/{key}` | count, expires_at | ตัวนับของ TR-34, TR-66 และ TR-81 ตั้ง TTL policy ที่ `expires_at` |
+| `admin_mfa/{uid}` | totp_secret (encrypted), recovery_codes (array ของ hash), enrolled_at, last_used_at | เฉพาะ Admin และ Super Admin (TR-81) |
 
 - **Security Rules:** เบราว์เซอร์อ่านหรือเขียน Firestore และ Cloud Storage โดยตรงไม่ได้ (`allow read, write: if false`) ทุกอย่างผ่าน server ที่ใช้ Admin SDK
 - **การเข้ารหัส:** `payload` ของ QR เข้ารหัสระดับแอปด้วย AES-256-GCM โดยใช้ key จาก Secret Manager
@@ -341,10 +344,11 @@ Cloud Scheduler ─► Cloud Run /internal/jobs   ลบบัญชีที่
 
 | Route / Action | สิทธิ์ | หน้าที่ |
 | --- | --- | --- |
-| `POST /api/auth/signup`, `POST /api/auth/login` | สาธารณะ (Turnstile, rate limited) | สมัครและ Login ด้วยอีเมล (TR-60, TR-66) |
-| `POST /api/session`, `DELETE /api/session` | สาธารณะ | รับ ID token แล้วออก session cookie หรือ Logout |
-| `GET /api/auth/line/start`, `GET /api/auth/line/callback` | สาธารณะ | Login ด้วย LINE แล้วออก custom token (TR-63) |
-| `saveQr`, `updateQr`, `deleteQr`, `listQr` | Member (ยืนยันอีเมลแล้ว) | จัดการ QR ที่บันทึก |
+| `POST /api/session`, `DELETE /api/session` | สาธารณะ (rate limited) | รับ ID token จากการ Login ด้วย Google แล้วออก session cookie หรือ Logout |
+| `acceptTerms` | Member ที่ Login ครั้งแรก | บันทึกการยอมรับ Terms, Privacy Policy และ opt-in อีเมลข่าวสาร |
+| `admin.enrollMfa`, `admin.verifyMfa`, `admin.useRecoveryCode` | Admin, Super Admin | ลงทะเบียนและตรวจ 2FA ของ CMS (TR-81) |
+| `admin.resetMfa` | Super Admin | รีเซ็ต 2FA ของ Admin |
+| `saveQr`, `updateQr`, `deleteQr`, `listQr` | Member (ยอมรับข้อกำหนดแล้ว) | จัดการ QR ที่บันทึก |
 | `savePreset`, `deletePreset`, `listPresets` | Member | จัดการ preset |
 | `updateProfile`, `changePassword`, `requestDataExport`, `deleteAccount` | Member | จัดการบัญชีตัวเอง |
 | `admin.listUsers`, `admin.getUser` | Admin | ดูผู้ใช้ |
@@ -384,7 +388,7 @@ Cloud Scheduler ─► Cloud Run /internal/jobs   ลบบัญชีที่
 | `qr_download` | `type`, `format`, `is_member` | ดาวน์โหลด |
 | `qr_copy`, `qr_share` | `type` | คัดลอกหรือแชร์ |
 | `qr_save` | `type` | สมาชิกบันทึก QR |
-| `sign_up` | `method` (email/google/line) | สมัครสำเร็จ (event มาตรฐาน GA4) |
+| `sign_up` | `method` (`google`) | Login ด้วย Google ครั้งแรกและยอมรับข้อกำหนดแล้ว (event มาตรฐาน GA4) |
 | `login` | `method` | Login สำเร็จ (event มาตรฐาน GA4) |
 | `language_switch` | `to` | สลับภาษา |
 | `affiliate_click` | `product_id`, `platform`, `placement`, `qr_type` | คลิกการ์ด Affiliate (นับซ้ำซ้อนกับ TR-103 ได้ แต่ GA ได้เฉพาะผู้ที่ consent) |
@@ -424,7 +428,7 @@ Cloud Scheduler ─► Cloud Run /internal/jobs   ลบบัญชีที่
 | NFR-11 | ตั้ง Content Security Policy แบบ nonce อนุญาตเฉพาะโดเมนของ Google Ads/Analytics, Turnstile และ OAuth provider ที่จำเป็น พร้อม `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy` และ `frame-ancestors 'none'` สำหรับ `/admin` |
 | NFR-12 | แสดงผลข้อมูลที่ผู้ใช้กรอกเป็นข้อความเท่านั้น ห้ามใช้ `dangerouslySetInnerHTML` กับ input ของผู้ใช้ |
 | NFR-13 | สแกน dependency ด้วย `npm audit` หรือ Dependabot ใน CI และห้าม deploy เมื่อพบช่องโหว่ระดับ high ขึ้นไป |
-| NFR-14 | เก็บ secret (LINE channel secret, encryption key, API key ของ Resend และ Turnstile) ใน Google Secret Manager เท่านั้น ห้าม commit ลง repository และต้องหมุนเวียน key ได้ Cloud Run เรียก Google API ด้วย service account ของตัวเอง ไม่ใช้ไฟล์ key |
+| NFR-14 | เก็บ secret (encryption key ของ payload และ TOTP, API key ของ Resend และ Turnstile) ใน Google Secret Manager เท่านั้น ห้าม commit ลง repository และต้องหมุนเวียน key ได้ Cloud Run เรียก Google API ด้วย service account ของตัวเอง ไม่ใช้ไฟล์ key |
 | NFR-15 | ป้องกัน CSRF สำหรับทุก mutation (Server Actions ตรวจ Origin และ auth endpoint ใช้ CSRF token) |
 | NFR-16 | ทดสอบตาม OWASP ASVS ระดับ 2 สำหรับส่วน authentication, session management และ access control ก่อนเปิดใช้งานจริง |
 | NFR-17 | Log ของแอปห้ามมีรหัสผ่าน token payload ของ QR หรืออีเมลแบบเต็ม (ให้ mask) |
@@ -437,7 +441,7 @@ Cloud Scheduler ─► Cloud Run /internal/jobs   ลบบัญชีที่
 | --- | --- |
 | NFR-20 | ไม่บันทึกหรือส่งเนื้อหา QR และไฟล์โลโก้ของ Guest ออกจากเบราว์เซอร์ |
 | NFR-21 | ข้อมูลจากฟอร์ม Contact ใช้เพื่อส่งอีเมลถึงผู้ดูแลเท่านั้น ไม่เก็บลงฐานข้อมูล |
-| NFR-22 | Privacy Policy ระบุข้อมูลที่เก็บจากสมาชิก วัตถุประสงค์ ระยะเวลาเก็บ ผู้ประมวลผลข้อมูลภายนอก (Google, LINE, hosting, database, email) และวิธีติดต่อเพื่อใช้สิทธิ์ของเจ้าของข้อมูล |
+| NFR-22 | Privacy Policy ระบุข้อมูลที่เก็บจากสมาชิก วัตถุประสงค์ ระยะเวลาเก็บ ผู้ประมวลผลข้อมูลภายนอก (Google ซึ่งให้บริการ Login, hosting และฐานข้อมูล และ Resend ซึ่งส่งอีเมล) และวิธีติดต่อเพื่อใช้สิทธิ์ของเจ้าของข้อมูล |
 | NFR-23 | Firestore, Cloud Run และ Cloud Storage ใช้ region `asia-southeast1` (สิงคโปร์) ส่วนข้อมูลบัญชีใน Firebase Authentication ไม่ได้เลือก region เองได้ (ตามเอกสารของ Firebase ส่วนใหญ่อยู่ในสหรัฐฯ) ต้องให้ที่ปรึกษากฎหมายรับรองเงื่อนไขการโอนข้อมูลไปต่างประเทศตาม PDPA และระบุใน Privacy Policy |
 | NFR-24 | backup ของ Firestore (export รายวันลง Cloud Storage ซึ่งเข้ารหัสอยู่แล้ว) เก็บไม่เกิน 30 วันด้วย lifecycle rule และข้อมูลที่ hard delete แล้วต้องหายจาก backup ภายในรอบการเก็บนั้น |
 | NFR-25 | การนับคลิก Affiliate/แบนเนอร์และสถิติการสแกน Dynamic QR ห้ามเก็บ IP จริงหรือ identifier ที่ใช้ติดตามข้ามวันได้ (ใช้ salt ที่เปลี่ยนรายวันตาม TR-122) |
@@ -468,7 +472,7 @@ qreasy.info.v2/
    │  ├─ app/
    │  │  ├─ [locale]/       หน้าสาธารณะ, auth, account (แยกภาษา)
    │  │  ├─ admin/          CMS
-   │  │  ├─ api/            auth, session, LINE callback
+   │  │  ├─ api/            session (Login ด้วย Google)
    │  │  ├─ internal/jobs/  งานที่ Cloud Scheduler เรียก
    │  │  ├─ go/             redirect ของ Affiliate และแบนเนอร์
    │  │  └─ ads.txt/        route เสิร์ฟ ads.txt
@@ -498,15 +502,15 @@ qreasy.info.v2/
 | --- | --- |
 | Unit | payload builder ทุกประเภท (รวมการ escape อักขระ), การตรวจ URL, การคำนวณ contrast, การตรวจรูปแบบ AdSense/GA ID |
 | Decode test | สร้าง QR ด้วยการตั้งค่าต่าง ๆ (สี โลโก้ รูปทรงจุด EC) แล้ว decode กลับด้วย `jsQR` หรือ `zxing` และต้องได้ payload ตรงกับต้นฉบับ |
-| Integration | Server Actions กับ Firebase Emulator Suite (Auth, Firestore, Storage) และทดสอบ Security Rules ด้วย `@firebase/rules-unit-testing` ครอบคลุมการตรวจสิทธิ์ทุก action: Guest, Member ที่ยังไม่ยืนยันอีเมล, Member, Admin, Super Admin, ผู้ใช้ที่ถูกระงับ |
-| Security | ทดสอบ IDOR (เข้าถึง QR ของผู้อื่น), privilege escalation (Admin แก้ role ตัวเอง), rate limit และ session หลังระงับหรือรีเซ็ตรหัสผ่าน |
-| E2E | เส้นทางหลัก: (1) Guest สร้างและดาวน์โหลด QR (2) สมัคร → ยืนยันอีเมล → บันทึก QR → เปิดจากหน้า "QR Code ของฉัน" (3) Admin Login + 2FA → ค้นหาผู้ใช้ → ระงับ → ผู้ใช้ Login ไม่ได้ (4) Admin ปิด ad slot แล้วหน้าเว็บไม่แสดงโฆษณาตำแหน่งนั้น (5) คลิกการ์ด Affiliate → นับคลิกแล้ว redirect ไปปลายทางที่ถูกต้อง (6) Phase 2: สมัคร Pro ด้วยบัตรทดสอบ → สร้าง Dynamic QR → แก้ปลายทาง → สแกนแล้วไปปลายทางใหม่ → โฆษณาหายทุกหน้า |
+| Integration | Server Actions กับ Firebase Emulator Suite (Auth, Firestore, Storage) และทดสอบ Security Rules ด้วย `@firebase/rules-unit-testing` ครอบคลุมการตรวจสิทธิ์ทุก action: Guest, Member ที่ยังไม่ยอมรับข้อกำหนด, Member, Admin ที่ยังไม่ผ่าน 2FA, Admin, Super Admin, ผู้ใช้ที่ถูกระงับ |
+| Security | ทดสอบ IDOR (เข้าถึง QR ของผู้อื่น), privilege escalation (Admin แก้ role ตัวเอง), rate limit ของ session และ 2FA และ session หลังระงับหรือกด Logout ทุกอุปกรณ์ |
+| E2E | เส้นทางหลัก: (1) Guest สร้างและดาวน์โหลด QR (2) Login ด้วย Google ครั้งแรก → ยอมรับข้อกำหนด → บันทึก QR → เปิดจากหน้า "QR Code ของฉัน" (3) Admin Login + 2FA → ค้นหาผู้ใช้ → ระงับ → ผู้ใช้ Login ไม่ได้ (4) Admin ปิด ad slot แล้วหน้าเว็บไม่แสดงโฆษณาตำแหน่งนั้น (5) คลิกการ์ด Affiliate → นับคลิกแล้ว redirect ไปปลายทางที่ถูกต้อง (6) Phase 2: สมัคร Pro ด้วยบัตรทดสอบ → สร้าง Dynamic QR → แก้ปลายทาง → สแกนแล้วไปปลายทางใหม่ → โฆษณาหายทุกหน้า |
 | Ad layout | ตรวจทุกตำแหน่งโฆษณาที่ viewport 360, 768, 1280 px ว่าห่างจากปุ่มดาวน์โหลด/คัดลอก/แชร์ตาม TR-110 และไม่เกิด layout shift |
 | Experiment | การสุ่ม variant กระจายตามน้ำหนัก (±2% ที่ 10,000 ตัวอย่าง) และผู้ใช้คนเดิมได้ variant เดิมตลอด |
 | Payment (Phase 2) | webhook ซ้ำ, ล่าช้า, signature ผิด, ชำระไม่สำเร็จ, คืนเงิน และการต่ออายุ ใช้ sandbox ของ gateway |
 | Load (Phase 2) | `/r/{code}` รับ 500 request/วินาที โดย p95 ไม่เกิน NFR-06 |
 | Accessibility | `axe-core` ใน Playwright ต้องไม่พบ violation ระดับ serious ขึ้นไป |
-| Manual | สแกน QR ตัวอย่างด้วยแอปกล้องของ iOS และ Android จริง และทดสอบ Login ด้วย Google และ LINE บนมือถือจริงก่อนออกแต่ละ release |
+| Manual | สแกน QR ตัวอย่างด้วยแอปกล้องของ iOS และ Android จริง และทดสอบ Login ด้วย Google บนมือถือจริง รวมถึงการเปิดลิงก์จากแอป LINE และ Facebook (TR-63a) ก่อนออกแต่ละ release |
 | Performance | Lighthouse CI ใน pipeline ตามเกณฑ์ NFR-04 |
 
 ## 11. CI/CD และสภาพแวดล้อม
@@ -555,12 +559,12 @@ qreasy.info.v2/
 | TQ-05 | ใช้โดเมนผู้ส่งอีเมลอะไร (เช่น `no-reply@qreasy.info`) ทั้งกับอีเมลของ Firebase Authentication และ Resend (เลือกบริการแล้ว: Firebase Auth + Resend) |
 | TQ-06 | เลือก CMP สำหรับ Cookie Consent ตัวไหน ต้องเป็นตัวที่ Google รับรองถ้าจะแสดงโฆษณาให้ผู้ใช้ใน EEA/UK |
 | ~~TQ-07~~ | ~~ผู้ให้บริการฐานข้อมูลและ region~~ — **ตัดสินแล้ว (6 พ.ย. 2026): Cloud Firestore ที่ `asia-southeast1`** |
-| ~~TQ-08~~ | ~~เลือกไลบรารี Auth และ ORM~~ — **ตัดสินแล้ว (6 พ.ย. 2026): Firebase Authentication (Identity Platform) + Firebase Admin SDK** |
-| TQ-09 | ใครเป็นผู้ลงทะเบียน OAuth app กับ Google Cloud และ LINE Developers ในนามของเว็บไซต์ |
+| ~~TQ-08~~ | ~~เลือกไลบรารี Auth และ ORM~~ — **ตัดสินแล้ว (6 พ.ย. 2026): Firebase Authentication (Google provider) + Firebase Admin SDK** |
+| ~~TQ-09~~ | ~~ใครเป็นผู้ลงทะเบียน OAuth app~~ — **ตอบแล้ว (6 พ.ย. 2026): Login ด้วย Google อย่างเดียว OAuth client อยู่ใน Firebase project ของเจ้าของผลิตภัณฑ์** ต้องตั้งค่า OAuth consent screen (ชื่อแอป, โลโก้, ลิงก์ Privacy Policy) ให้เรียบร้อยก่อนเปิดใช้ |
 | TQ-10 | Ezoic มีวิธีเชื่อมต่อหลายแบบ (เช่น ผ่าน nameserver หรือ Cloudflare) แบบใดเข้ากับ hosting และ CSP ที่เลือก หรือจะเลือกพาร์ตเนอร์ Google Ad Manager แทน |
 | TQ-11, TQ-12 | _(พักไว้พร้อม Phase 2)_ เลือก payment gateway และ Safe Browsing/Web Risk API |
 | ~~TQ-13~~ | ~~ใครเป็นเจ้าของ billing account และใครได้รับ Budget Alert~~ — **ตอบแล้ว (6 พ.ย. 2026): เจ้าของผลิตภัณฑ์เป็นเจ้าของ billing account และเป็นผู้รับ Budget Alert** ทีมพัฒนาได้สิทธิ์ระดับ project เท่าที่จำเป็น ไม่ได้สิทธิ์จัดการ billing |
-| TQ-14 | ตรวจโควต้าฟรีและราคาล่าสุดของทุกบริการในหัวข้อ 2.1 กับหน้าราคาจริงก่อนเปิดใช้ โดยเฉพาะโควต้าฟรีของ Cloud Run ใน `asia-southeast1` และราคาของ Identity Platform |
+| TQ-14 | ตรวจโควต้าฟรีและราคาล่าสุดของทุกบริการในหัวข้อ 2.1 กับหน้าราคาจริงก่อนเปิดใช้ โดยเฉพาะโควต้าฟรีของ Cloud Run ใน `asia-southeast1` และราคาของ Cloud DNS |
 
 ## 15. ตารางอ้างอิง BR → TR
 
@@ -578,24 +582,24 @@ qreasy.info.v2/
 | BR-30 – BR-35 | TR-30 – TR-36 |
 | BR-40 – BR-44 | TR-03, TR-42 – TR-45, NFR-20 |
 | BR-50, BR-51 | TR-50 – TR-52 |
-| BR-60 | TR-60, TR-61 |
-| BR-61 | TR-62 |
-| BR-62 | TR-63 |
-| BR-63 | TR-64, TR-65 |
+| ~~BR-60~~ | ตัดออกใน 0.6 |
+| BR-61 | TR-62, TR-63a |
+| ~~BR-62~~ | ตัดออกใน 0.6 |
+| BR-63 | TR-64 |
 | BR-64 | TR-70 – TR-73, TR-75 |
 | BR-65 | TR-74 |
 | BR-66 | TR-31, TR-75 |
 | BR-67 | TR-76 |
 | BR-68 | TR-77 |
-| BR-69 | TR-68 |
-| BR-70 | TR-66, TR-67 |
-| BR-71 | TR-69 |
+| BR-69 | TR-62, TR-68 |
+| BR-70 | TR-34 |
+| ~~BR-71~~ | ตัดออกใน 0.6 |
 | BR-75 | TR-80 |
 | BR-76 | TR-82 |
 | BR-77 | TR-83 |
 | BR-78 | TR-84 |
 | BR-79 | TR-85 |
-| BR-80 | TR-86 |
+| ~~BR-80~~ | ตัดออกใน 0.6 |
 | BR-81 | TR-87 |
 | BR-82 | TR-88 |
 | BR-83 | TR-89, TR-98 |
