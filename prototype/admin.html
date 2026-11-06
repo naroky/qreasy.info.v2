@@ -1,0 +1,665 @@
+<title>QREASY CMS Prototype</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
+<style>
+/* Layout: sticky top bar; CMS = tab rail | content (rail stacks above content on phones); auth screens = one centered card */
+:root {
+  --bg: #eef1f6;
+  --surface: #ffffff;
+  --surface-2: #f3f5f9;
+  --line: #d5dbe9;
+  --fg: #101a30;
+  --muted: #55607b;
+  --accent: #2741cc;
+  --accent-ink: #ffffff;
+  --accent-soft: #e2e7fc;
+  --ok: #1b6f45;
+  --ok-soft: #dcf1e5;
+  --warn: #8f5300;
+  --warn-soft: #fbeed6;
+  --bad: #ab2238;
+  --bad-soft: #fbe1e6;
+  --shadow: 0 1px 2px rgba(16, 26, 48, 0.06), 0 8px 24px rgba(16, 26, 48, 0.06);
+  --f-display: "Bai Jamjuree", "IBM Plex Sans Thai", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans Thai", "Noto Sans Thai", "Leelawadee UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1220; --surface: #141a2c; --surface-2: #1a2238; --line: #2a3452; --fg: #e6eaf5; --muted: #98a3c2;
+    --accent: #8d9fff; --accent-ink: #0d1220; --accent-soft: #222b52;
+    --ok: #63d39b; --ok-soft: #12301f; --warn: #f0b45a; --warn-soft: #33260f; --bad: #ff8a9b; --bad-soft: #3a1820;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1220; --surface: #141a2c; --surface-2: #1a2238; --line: #2a3452; --fg: #e6eaf5; --muted: #98a3c2;
+  --accent: #8d9fff; --accent-ink: #0d1220; --accent-soft: #222b52;
+  --ok: #63d39b; --ok-soft: #12301f; --warn: #f0b45a; --warn-soft: #33260f; --bad: #ff8a9b; --bad-soft: #3a1820;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 15px; line-height: 1.6; }
+h1, h2, h3 { font-family: var(--f-display); line-height: 1.2; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem); font-weight: 700; }
+h2 { font-size: 1.05rem; font-weight: 600; }
+p { margin: 0; }
+a { color: var(--accent); }
+.mono { font-family: var(--f-mono); }
+.small { font-size: 0.82rem; }
+.muted { color: var(--muted); }
+.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+.gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+.proto { background: var(--surface-2); border-bottom: 1px solid var(--line); font-size: 0.8rem; color: var(--muted); }
+.proto-in { max-width: 1320px; margin: 0 auto; padding-block: 6px; display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: center; }
+.proto b { color: var(--fg); font-family: var(--f-mono); font-weight: 500; letter-spacing: 0.06em; }
+.proto code { font-family: var(--f-mono); color: var(--fg); }
+
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 9; background: var(--surface); border-bottom: 1px solid var(--line); }
+.top-in { max-width: 1320px; margin: 0 auto; padding-block: 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.glyph { width: 20px; height: 20px; border: 3px solid var(--fg); border-radius: 3px; position: relative; flex: none; }
+.glyph::after { content: ""; position: absolute; inset: 3px; background: var(--accent); border-radius: 1px; }
+.brand-t { font-family: var(--f-display); font-weight: 700; font-size: 1.05rem; letter-spacing: 0.04em; }
+.top-tools { margin-left: auto; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.who { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; min-width: 0; }
+.who span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 24ch; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); font: inherit; font-weight: 500; padding: 8px 14px; border-radius: 8px; cursor: pointer; text-decoration: none; transition: border-color 0.15s; }
+.btn:hover { border-color: var(--accent); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn-primary:hover { filter: brightness(1.08); }
+.btn-danger { color: var(--bad); border-color: var(--bad); background: transparent; }
+.btn-danger-solid { background: var(--bad); border-color: var(--bad); color: #ffffff; }
+.btn.sm { padding: 5px 11px; font-size: 0.86rem; }
+.btn-text { background: none; border: 0; font: inherit; color: var(--muted); cursor: pointer; padding: 6px 8px; border-radius: 6px; }
+.btn-text:hover { color: var(--fg); background: var(--surface-2); }
+.link-btn { background: none; border: 0; padding: 0; font: inherit; color: var(--accent); cursor: pointer; text-decoration: underline; }
+
+label { font-weight: 500; font-size: 0.88rem; }
+input[type="text"], input[type="url"], input[type="email"], input:not([type]), select, textarea {
+  width: 100%; font: inherit; color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 8px 11px;
+}
+textarea { min-height: 84px; resize: vertical; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.check { display: flex; align-items: center; gap: 8px; font-weight: 400; }
+.check input { width: 18px; height: 18px; accent-color: var(--accent); flex: none; }
+.err { color: var(--bad); font-size: 0.82rem; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; }
+.row > input, .row > select { flex: 1 1 180px; min-width: 0; }
+.stack { display: flex; flex-direction: column; gap: 12px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; }
+.alert { border-radius: 8px; padding: 9px 12px; font-size: 0.88rem; border-left: 3px solid; }
+.alert.info { background: var(--accent-soft); color: var(--accent); }
+.alert.warn { background: var(--warn-soft); color: var(--warn); }
+.alert.bad { background: var(--bad-soft); color: var(--bad); }
+.alert.ok { background: var(--ok-soft); color: var(--ok); }
+.pill { display: inline-block; font-size: 0.74rem; font-weight: 600; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
+.pill.ok { background: var(--ok-soft); color: var(--ok); }
+.pill.bad { background: var(--bad-soft); color: var(--bad); }
+.pill.warn { background: var(--warn-soft); color: var(--warn); }
+.pill.neutral { background: var(--surface-2); color: var(--muted); border: 1px solid var(--line); }
+.pill.accent { background: var(--accent-soft); color: var(--accent); }
+
+/* auth screens */
+.auth-wrap { min-height: 70vh; display: grid; place-items: center; padding-block: 40px; }
+.auth { width: 100%; max-width: 440px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 28px; display: flex; flex-direction: column; gap: 16px; box-shadow: var(--shadow); }
+.google { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 11px 16px; font: inherit; font-weight: 600; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--fg); cursor: pointer; }
+.google:hover { border-color: var(--accent); }
+.g-mark { width: 20px; height: 20px; border-radius: 50%; background: conic-gradient(#ea4335 0 25%, #fbbc05 0 50%, #34a853 0 75%, #4285f4 0); position: relative; flex: none; }
+.g-mark::after { content: ""; position: absolute; inset: 5px; border-radius: 50%; background: var(--surface); }
+.picker { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.picker button { display: flex; width: 100%; text-align: left; gap: 12px; align-items: center; padding: 11px 14px; border: 0; border-top: 1px solid var(--line); background: var(--surface); color: var(--fg); font: inherit; cursor: pointer; }
+.picker button:first-child { border-top: 0; }
+.picker button:hover { background: var(--surface-2); }
+.avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-weight: 600; flex: none; }
+.code-input { font-family: var(--f-mono) !important; font-size: 1.5rem !important; letter-spacing: 0.4em; text-align: center; }
+.qr-box { display: grid; place-items: center; padding: 12px; background: #ffffff; border: 1px solid var(--line); border-radius: 10px; }
+.qr-box > div { width: 180px; }
+.qr-box svg { display: block; width: 100%; height: auto; }
+.secret { font-family: var(--f-mono); font-size: 0.95rem; letter-spacing: 0.08em; background: var(--surface-2); padding: 8px 10px; border-radius: 6px; word-break: break-all; }
+.codes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 12px; font-family: var(--f-mono); font-size: 0.95rem; background: var(--surface-2); padding: 12px 14px; border-radius: 8px; }
+
+/* shell */
+.shell { max-width: 1320px; margin: 0 auto; padding-block: 22px 56px; display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+.side { flex: 1 1 190px; max-width: 220px; display: flex; flex-direction: column; gap: 4px; }
+@media (max-width: 760px) { .side { max-width: none; flex-direction: row; overflow-x: auto; } }
+.side a { white-space: nowrap; text-decoration: none; color: var(--muted); padding: 8px 12px; border-radius: 8px; font-weight: 500; }
+.side a:hover { background: var(--surface); color: var(--fg); }
+.side a.on { background: var(--fg); color: var(--bg); }
+.main { flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 18px; }
+.page-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px; }
+.page-head > div { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.grid2 { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.filters { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+.filters .field { flex: 1 1 170px; }
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); background: var(--surface-2); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td.r, th.r { text-align: right; }
+tr.open > td { background: var(--accent-soft); }
+tr.detail > td { background: var(--surface-2); padding: 16px; }
+.detail-grid { display: flex; flex-wrap: wrap; gap: 20px; }
+.detail-grid > * { flex: 1 1 280px; min-width: 0; }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 0; font-size: 0.88rem; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.act { display: flex; flex-direction: column; gap: 6px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+.act:last-child { border-bottom: 0; padding-bottom: 0; }
+.switch { display: inline-flex; align-items: center; gap: 10px; font-weight: 500; cursor: pointer; }
+.switch input { width: 40px; height: 22px; appearance: none; background: var(--line); border-radius: 999px; position: relative; cursor: pointer; transition: background 0.15s; flex: none; margin: 0; }
+.switch input::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--surface); transition: transform 0.15s; }
+.switch input:checked { background: var(--accent); }
+.switch input:checked::after { transform: translateX(18px); }
+.types-check { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.foot-note { font-size: 0.8rem; color: var(--muted); }
+.toasts { position: fixed; z-index: 30; top: calc(env(safe-area-inset-top, 0px) + 70px); right: max(12px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 8px; max-width: min(380px, calc(100vw - 24px)); pointer-events: none; }
+.toast { background: var(--fg); color: var(--bg); padding: 10px 14px; border-radius: 8px; font-size: 0.88rem; box-shadow: var(--shadow); animation: tin 0.2s ease-out; }
+.toast.bad { background: var(--bad); color: #ffffff; }
+@keyframes tin { from { transform: translateY(-6px); opacity: 0; } to { transform: none; opacity: 1; } }
+</style>
+
+<div class="proto gutter" id="proto"></div>
+<header class="top gutter" id="top"></header>
+<main class="gutter" id="app"></main>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- storage (prototype only: lives in this browser) ---------- */
+  const mem = {};
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem(k); if (v !== null) return JSON.parse(v); } catch (e) {} return k in mem ? mem[k] : d; },
+    set(k, v) { mem[k] = v; try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+    del(k) { delete mem[k]; try { localStorage.removeItem(k); } catch (e) {} }
+  };
+  const DAY = 864e5, NOW = Date.now();
+  const $ = (s, r) => (r || document).querySelector(s);
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const clone = o => JSON.parse(JSON.stringify(o));
+  const rid = n => Array.from({ length: n }, () => 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random() * 32)]).join('');
+  const fmtDate = (t, time) => { try { return new Intl.DateTimeFormat('th-TH', time ? { dateStyle: 'medium', timeStyle: 'short' } : { dateStyle: 'medium' }).format(new Date(t)); } catch (e) { return new Date(t).toLocaleString(); } };
+  const rank = { member: 0, admin: 1, super_admin: 2 };
+  const roleLabel = r => ({ member: 'สมาชิก', admin: 'Admin', super_admin: 'Super Admin' }[r] || r);
+  const TYPES = [['url', 'ลิงก์'], ['text', 'ข้อความ'], ['wifi', 'Wi-Fi'], ['email', 'อีเมล'], ['phone', 'เบอร์โทร'], ['sms', 'SMS'], ['vcard', 'นามบัตร'], ['any', 'ทุกประเภท']];
+  const typeLabel = t => (TYPES.find(x => x[0] === t) || [t, t])[1];
+  const ALLOWED_HOSTS = ['shopee.co.th', 's.shopee.co.th', 'lazada.co.th', 'www.lazada.co.th', 's.lazada.co.th', 'invol.co', 'atth.me'];
+
+  function seed() {
+    const u = (id, name, email, role, created, last, extra) => Object.assign({ id, name, email, role, status: 'active', createdAt: NOW - created * DAY, lastLogin: NOW - last * DAY, reason: '', qrs: 0, mfa: null }, extra || {});
+    return {
+      version: 1,
+      users: [
+        u('u1', 'เจ้าของเว็บไซต์', 'admin@qreasy.info', 'super_admin', 180, 0, { mfa: { enrolledAt: NOW - 170 * DAY, recovery: ['AAAA-1111', 'BBBB-2222', 'CCCC-3333', 'DDDD-4444', 'EEEE-5555', 'FFFF-6666', 'GGGG-7777', 'HHHH-8888', 'JJJJ-9999', 'KKKK-0000'] } }),
+        u('u2', 'Ops Admin', 'ops.admin@example.com', 'admin', 30, 2),
+        u('u3', 'Demo Member', 'demo@qreasy.info', 'member', 40, 2, { qrs: 2 }),
+        u('u4', 'ร้านกาแฟบ้านสวน', 'cafe.baansuan@example.com', 'member', 3, 0, { qrs: 5 }),
+        u('u5', 'Narin P.', 'narin.p@example.com', 'member', 6, 1, { qrs: 1 }),
+        u('u6', 'ครูแพร', 'kru.prae@example.com', 'member', 12, 4, { qrs: 9 }),
+        u('u7', 'Studio Ink', 'hello@studioink.example', 'member', 25, 9, { qrs: 14 }),
+        u('u8', 'Somsak T.', 'somsak.t@example.com', 'member', 50, 20, { status: 'suspended', reason: 'สร้าง QR ไปยังลิงก์หลอกลวงซ้ำหลายครั้ง', qrs: 3 }),
+        u('u9', 'Mali K.', 'mali.k@example.com', 'member', 1, 0),
+        u('u10', 'Kittipong S.', 'kittipong.s@example.com', 'member', 75, 33, { qrs: 4 }),
+        u('u11', 'Ploy R.', 'ploy.r@example.com', 'member', 9, 9, { qrs: 2 })
+      ],
+      settings: {
+        adsEnabled: false, hideForMembers: false, gaEnabled: true, gaId: 'G-QREASY2026', adsTxt: '', maxSaved: 100,
+        weights: { adsense: 100, ezoic: 0 },
+        slots: [
+          { key: 'generator_side', size: '300×600', client: '', slot: '', enabled: true },
+          { key: 'generator_below', size: '320×100 / Responsive', client: '', slot: '', enabled: true },
+          { key: 'mobile_anchor', size: '320×50', client: '', slot: '', enabled: false },
+          { key: 'article_inline', size: 'Responsive', client: '', slot: '', enabled: true }
+        ]
+      },
+      affiliates: [
+        { id: 'a1', nameTh: 'ป้ายตั้งโต๊ะอะคริลิก A6 ใส่ QR Code', nameEn: 'A6 acrylic QR table stand', platform: 'Shopee', price: '฿59–150', types: ['url', 'wifi', 'any'], url: 'https://shopee.co.th/search?keyword=%E0%B8%9B%E0%B9%89%E0%B8%B2%E0%B8%A2%E0%B8%AD%E0%B8%B0%E0%B8%84%E0%B8%A3%E0%B8%B4%E0%B8%A5%E0%B8%B4%E0%B8%81', enabled: true, sort: 1, clicks: 14 },
+        { id: 'a2', nameTh: 'สติกเกอร์ PVC กันน้ำ สั่งพิมพ์ QR', nameEn: 'Waterproof PVC QR stickers', platform: 'Lazada', price: '฿120–350', types: ['url', 'text'], url: 'https://www.lazada.co.th/catalog/?q=qr+sticker', enabled: true, sort: 2, clicks: 9 },
+        { id: 'a3', nameTh: 'นามบัตร NFC', nameEn: 'NFC business card', platform: 'Shopee', price: '฿150–490', types: ['vcard', 'phone', 'email'], url: 'https://shopee.co.th/search?keyword=nfc+card', enabled: true, sort: 3, clicks: 5 },
+        { id: 'a4', nameTh: 'กระดาษสติกเกอร์สำหรับเครื่องพิมพ์', nameEn: 'Printable sticker paper', platform: 'Lazada', price: '฿99–220', types: ['any'], url: 'https://www.lazada.co.th/catalog/?q=sticker+paper', enabled: false, sort: 4, clicks: 0 }
+      ],
+      audit: [
+        { at: NOW - 20 * DAY, actor: 'admin@qreasy.info', action: 'user.suspend', target: 'somsak.t@example.com', detail: 'สร้าง QR ไปยังลิงก์หลอกลวงซ้ำหลายครั้ง' },
+        { at: NOW - 30 * DAY, actor: 'admin@qreasy.info', action: 'user.role', target: 'ops.admin@example.com', detail: 'member → admin' },
+        { at: NOW - 31 * DAY, actor: 'admin@qreasy.info', action: 'settings.update', target: 'ads/ga', detail: 'ga G-QREASY2026' }
+      ]
+    };
+  }
+  let db = store.get('qa_db', null);
+  if (!db || db.version !== 1) { db = seed(); store.set('qa_db', db); }
+  const persist = () => store.set('qa_db', db);
+  let session = store.get('qa_session', null);
+
+  const state = {
+    theme: store.get('qa_theme', 'system'),
+    pickerOpen: false, authMsg: null, mfaFails: 0, mfaLockUntil: 0, useRecovery: false,
+    enroll: null,
+    q: '', fStatus: 'all', fRole: 'all', openUser: null,
+    adsErr: {}, adsDraft: null,
+    affEdit: null, affErr: {}, affConfirm: null,
+    auActor: 'all', auAction: '',
+    resetArmed: false
+  };
+
+  /* ---------- helpers ---------- */
+  function me() {
+    if (!session) return null;
+    const u = db.users.find(x => x.id === session.uid);
+    if (!u || u.status !== 'active') { session = null; store.del('qa_session'); return null; }
+    return u;
+  }
+  const isAdmin = u => u && rank[u.role] >= 1;
+  function route() { return location.hash.replace(/^#/, '') || 'overview'; }
+  function go(h) { if (route() === h) render(); else location.hash = h; }
+  function toast(msg, kind) {
+    const el = document.createElement('div');
+    el.className = 'toast' + (kind === 'bad' ? ' bad' : '');
+    el.textContent = msg; $('#toasts').appendChild(el);
+    setTimeout(() => el.remove(), 3800);
+  }
+  function audit(action, target, detail) {
+    const u = me();
+    db.audit.unshift({ at: Date.now(), actor: u ? u.email : '-', action, target, detail: detail || '' });
+    db.audit = db.audit.slice(0, 300); persist();
+  }
+  function applyTheme() { if (state.theme === 'system') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', state.theme); }
+  const themeLabel = () => ({ system: 'ธีม: ตามระบบ', light: 'ธีม: สว่าง', dark: 'ธีม: มืด' }[state.theme]);
+  async function saveFile(name, text) {
+    const blob = new Blob([text], { type: 'text/csv;charset=utf-8' });
+    if (window.claude && typeof window.claude.use === 'function') {
+      const dl = await window.claude.use('downloads');
+      if (!dl) { toast('หน้านี้ดาวน์โหลดไฟล์ไม่ได้ เปิด prototype/admin.html ในเครื่องแทน', 'bad'); return false; }
+      try { await dl.save({ filename: name, data: blob }); return true; }
+      catch (err) { if (!err || err.code !== 'declined') toast('บันทึกไฟล์ไม่สำเร็จ', 'bad'); return false; }
+    }
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    return true;
+  }
+
+  /* ---------- chrome ---------- */
+  function renderProto() {
+    $('#proto').innerHTML = '<div class="proto-in"><b>PROTOTYPE · CMS</b><span>ข้อมูลทั้งหมดเป็นตัวอย่าง เก็บเฉพาะในเบราว์เซอร์นี้</span>' +
+      '<span>Login จำลอง: เลือกบัญชี Google จากรายการ · รหัส 2FA <code>123456</code> · รหัสกู้คืนของ admin <code>AAAA-1111</code></span>' +
+      '<button class="link-btn small" data-act="reset">' + (state.resetArmed ? 'กดอีกครั้งเพื่อยืนยันการรีเซ็ต' : 'รีเซ็ตข้อมูลตัวอย่าง') + '</button></div>';
+  }
+  function renderTop() {
+    const u = me(), ok = u && session && session.mfa;
+    $('#top').innerHTML = '<div class="top-in"><div class="brand"><span class="glyph" aria-hidden="true"></span><span class="brand-t">QREASY CMS</span></div>' +
+      '<div class="top-tools"><button class="btn-text small" data-act="theme">' + themeLabel() + '</button>' +
+      (ok ? '<span class="who"><span title="' + esc(u.email) + '">' + esc(u.email) + '</span><span class="pill ' + (u.role === 'super_admin' ? 'accent' : 'neutral') + '">' + roleLabel(u.role) + '</span></span><button class="btn sm" data-act="logout">ออกจากระบบ</button>' : '') +
+      '</div></div>';
+  }
+
+  /* ---------- auth views ---------- */
+  function msg() { if (!state.authMsg) return ''; const m = state.authMsg; state.authMsg = null; return '<div class="alert ' + m.kind + '" role="status">' + esc(m.text) + '</div>'; }
+  function viewLogin() {
+    const accounts = db.users.filter(x => ['admin@qreasy.info', 'ops.admin@example.com', 'demo@qreasy.info'].indexOf(x.email) >= 0);
+    return '<div class="auth-wrap"><section class="auth" aria-labelledby="lg-h"><h1 id="lg-h">เข้าสู่ CMS</h1><p class="muted">ใช้บัญชี Google ที่ได้รับสิทธิ์ผู้ดูแลระบบ</p>' + msg() +
+      '<button class="google" data-act="google" aria-expanded="' + state.pickerOpen + '"><span class="g-mark" aria-hidden="true"></span>เข้าสู่ระบบด้วย Google</button>' +
+      (state.pickerOpen ? '<div class="stack"><p class="small muted">หน้าต่างเลือกบัญชีของ Google (จำลอง)</p><div class="picker" role="list">' + accounts.map(a =>
+        '<button role="listitem" data-act="pick" data-id="' + a.id + '"><span class="avatar" aria-hidden="true">' + esc(a.name.charAt(0)) + '</span><span><strong>' + esc(a.name) + '</strong><br><span class="small muted">' + esc(a.email) + ' · ' + roleLabel(a.role) + (a.role !== 'member' ? (a.mfa ? ' · ลงทะเบียน 2FA แล้ว' : ' · ยังไม่ลงทะเบียน 2FA') : '') + '</span></span></button>').join('') + '</div></div>' : '') +
+      '<p class="foot-note">ระบบไม่มีรหัสผ่านของตัวเอง ผู้ดูแลต้องยืนยันรหัส 6 หลักจากแอป Authenticator ทุกครั้งที่เข้า CMS · session หมดอายุใน 8 ชั่วโมง หรือเมื่อไม่ใช้งาน 30 นาที</p></section></div>';
+  }
+  function viewEnroll() {
+    const u = me(), e = state.enroll;
+    if (e.step === 2) {
+      return '<div class="auth-wrap"><section class="auth"><h1>เก็บรหัสกู้คืน</h1><p class="muted">ใช้รหัสเหล่านี้แทนรหัสจากแอปเมื่อทำมือถือหาย แต่ละรหัสใช้ได้ครั้งเดียว ระบบจะไม่แสดงรหัสชุดนี้อีก</p>' +
+        '<div class="codes" aria-label="รหัสกู้คืน">' + e.codes.map(c => '<span>' + c + '</span>').join('') + '</div>' +
+        '<div class="row"><button class="btn sm" data-act="copyCodes">คัดลอกทั้งหมด</button><button class="btn sm" data-act="dlCodes">ดาวน์โหลดเป็นไฟล์</button></div>' +
+        '<label class="check"><input type="checkbox" id="saved-codes"> ฉันเก็บรหัสกู้คืนไว้ในที่ปลอดภัยแล้ว</label>' +
+        '<button class="btn btn-primary" data-act="finishEnroll">เข้าสู่ CMS</button></section></div>';
+    }
+    return '<div class="auth-wrap"><section class="auth"><h1>ตั้งค่า 2FA</h1><p class="muted">บัญชี ' + esc(u.email) + ' เป็น ' + roleLabel(u.role) + ' ต้องตั้งค่ายืนยันตัวตนสองชั้นก่อนเข้า CMS</p>' + msg() +
+      '<ol class="stack" style="margin:0;padding-left:20px"><li>เปิดแอป Authenticator (เช่น Google Authenticator) แล้วสแกน QR นี้</li><li>กรอกรหัส 6 หลักที่แอปแสดง</li></ol>' +
+      '<div class="qr-box"><div id="totp-qr" role="img" aria-label="QR สำหรับเพิ่มบัญชีในแอป Authenticator"></div></div>' +
+      '<div class="field"><span class="small muted">สแกนไม่ได้? กรอก secret นี้ในแอปแทน</span><span class="secret">' + e.secret.replace(/(.{4})/g, '$1 ').trim() + '</span></div>' +
+      '<form data-form="enroll" class="stack" novalidate><div class="field"><label for="en-code">รหัส 6 หลัก (ทดลองใช้ 123456)</label><input id="en-code" class="code-input" inputmode="numeric" maxlength="6" autocomplete="one-time-code"></div>' +
+      '<button class="btn btn-primary" type="submit">ยืนยันและเปิดใช้ 2FA</button></form><button class="link-btn small" data-act="logout">ยกเลิกและออกจากระบบ</button></section></div>';
+  }
+  function viewVerify() {
+    const u = me(), locked = state.mfaLockUntil > Date.now();
+    return '<div class="auth-wrap"><section class="auth"><h1>ยืนยันตัวตนสองชั้น</h1><p class="muted">' + esc(u.email) + '</p>' + msg() +
+      (locked ? '<div class="alert bad">กรอกรหัสผิดเกิน 5 ครั้ง ลองใหม่ได้ในอีก ' + Math.ceil((state.mfaLockUntil - Date.now()) / 60000) + ' นาที</div>' :
+        (state.useRecovery
+          ? '<form data-form="recovery" class="stack" novalidate><div class="field"><label for="rc">รหัสกู้คืน (เช่น AAAA-1111)</label><input id="rc" class="mono" autocomplete="off"></div><button class="btn btn-primary" type="submit">ใช้รหัสกู้คืน</button></form><button class="link-btn small" data-act="toggleRecovery">กลับไปใช้รหัสจากแอป</button>'
+          : '<form data-form="verify" class="stack" novalidate><div class="field"><label for="vf">รหัส 6 หลักจากแอป Authenticator</label><input id="vf" class="code-input" inputmode="numeric" maxlength="6" autocomplete="one-time-code"></div><button class="btn btn-primary" type="submit">ยืนยัน</button></form><button class="link-btn small" data-act="toggleRecovery">ไม่มีมือถือ? ใช้รหัสกู้คืน</button>')) +
+      '<button class="link-btn small" data-act="logout">ออกจากระบบ</button></section></div>';
+  }
+  function viewDenied() {
+    return '<div class="auth-wrap"><section class="auth"><h1>ไม่มีสิทธิ์เข้า CMS</h1><p class="muted">บัญชีนี้เป็นสมาชิกทั่วไป CMS เปิดให้เฉพาะ Admin และ Super Admin</p><button class="btn" data-act="logout">ใช้บัญชีอื่น</button></section></div>';
+  }
+
+  /* ---------- CMS views ---------- */
+  const TABS = [['overview', 'ภาพรวม'], ['users', 'ผู้ใช้'], ['ads', 'โฆษณาและ GA'], ['affiliate', 'Affiliate'], ['audit', 'Audit Log']];
+  function shell(r, inner) {
+    return '<div class="shell"><nav class="side" aria-label="เมนู CMS">' + TABS.map(t => '<a href="#' + t[0] + '"' + (t[0] === r ? ' class="on" aria-current="page"' : '') + '>' + t[1] + '</a>').join('') + '</nav><section class="main">' + inner + '</section></div>';
+  }
+  function head(t, sub, right) { return '<div class="page-head"><div><h1>' + t + '</h1>' + (sub ? '<p class="muted">' + sub + '</p>' : '') + '</div>' + (right || '') + '</div>'; }
+
+  function viewOverview() {
+    const us = db.users, st = db.settings;
+    const n = d => us.filter(u => NOW - u.createdAt <= d * DAY).length;
+    const act = d => us.filter(u => u.status === 'active' && NOW - u.lastLogin <= d * DAY).length;
+    const qrs = us.reduce((s, u) => s + u.qrs, 0), clicks = db.affiliates.reduce((s, a) => s + a.clicks, 0);
+    const rows = [['สมาชิกทั้งหมด', us.length, us.length], ['สมาชิกใหม่', n(7), n(30)], ['สมาชิกที่ใช้งาน', act(7), act(30)], ['ถูกระงับ', us.filter(u => u.status === 'suspended').length, '–'], ['QR ที่บันทึก', qrs, qrs], ['คลิก Affiliate', '–', clicks]];
+    const ga = [['ผู้เข้าชม', '1,284', '5,910'], ['Page view', '2,033', '9,402'], ['ดาวน์โหลด QR (PNG)', '812', '3,655'], ['ดาวน์โหลด QR (SVG)', '96', '402'], ['Affiliate impression', '640', '2,880']];
+    const tbl = (h, rs) => '<div class="tbl-wrap"><table><thead><tr><th>' + h + '</th><th class="r">7 วัน</th><th class="r">30 วัน</th></tr></thead><tbody>' + rs.map(r => '<tr><td>' + r[0] + '</td><td class="r num">' + r[1] + '</td><td class="r num">' + r[2] + '</td></tr>').join('') + '</tbody></table></div>';
+    const issues = [];
+    if (!st.adsEnabled) issues.push(['warn', 'โฆษณาปิดอยู่ เพราะยังไม่มีบัญชี AdSense เปิดได้ที่หน้าโฆษณาและ GA หลังบัญชีได้รับอนุมัติ']);
+    if (!st.gaEnabled) issues.push(['warn', 'ปิดการเก็บข้อมูล Analytics อยู่ ตัวเลขจาก GA4 จะไม่อัปเดต']);
+    const noMfa = us.filter(u => isAdmin(u) && !u.mfa);
+    if (noMfa.length) issues.push(['info', 'Admin ที่ยังไม่ลงทะเบียน 2FA: ' + noMfa.map(u => u.email).join(', ') + ' (จะเข้า CMS ไม่ได้จนกว่าจะลงทะเบียน)']);
+    return head('ภาพรวม', 'ตัวเลขสมาชิกมาจากฐานข้อมูล ตัวเลขผู้เข้าชมมาจาก GA4 Data API (อัปเดตทุก 1 ชั่วโมง)') +
+      (issues.length ? '<div class="stack">' + issues.map(i => '<div class="alert ' + i[0] + '">' + esc(i[1]) + '</div>').join('') + '</div>' : '') +
+      '<div class="grid2"><div class="stack"><h2>สมาชิก</h2>' + tbl('ตัวชี้วัด', rows) + '</div><div class="stack"><h2>จาก GA4 <span class="pill neutral">ตัวเลขตัวอย่าง</span></h2>' + tbl('ตัวชี้วัด', ga) + '</div></div>' +
+      '<div class="stack"><div class="page-head"><h2>การกระทำล่าสุด</h2><a href="#audit" class="small">ดู Audit Log ทั้งหมด</a></div>' + auditTable(db.audit.slice(0, 5)) + '</div>';
+  }
+
+  function canManage(a, t) { return a.id !== t.id && rank[a.role] > rank[t.role]; }
+  function statusPill(u) { return u.status === 'active' ? '<span class="pill ok">ใช้งาน</span>' : '<span class="pill bad">ถูกระงับ</span>'; }
+  function rolePill(u) { return '<span class="pill ' + (u.role === 'member' ? 'neutral' : 'accent') + '">' + roleLabel(u.role) + '</span>'; }
+  function filteredUsers() {
+    const q = state.q.trim().toLowerCase();
+    return db.users.filter(u => (!q || u.email.toLowerCase().indexOf(q) === 0 || u.name.toLowerCase().indexOf(q) === 0) && (state.fStatus === 'all' || u.status === state.fStatus) && (state.fRole === 'all' || u.role === state.fRole)).sort((a, b) => b.createdAt - a.createdAt);
+  }
+  function viewUsers() {
+    const sel = (id, key, opts) => '<select id="' + id + '" data-uf="' + key + '">' + opts.map(o => '<option value="' + o[0] + '"' + (state[key] === o[0] ? ' selected' : '') + '>' + o[1] + '</option>').join('') + '</select>';
+    return head('ผู้ใช้', 'ทุกคน Login ด้วยบัญชี Google · ทุกการกระทำถูกบันทึกใน Audit Log', '<button class="btn" data-act="exportCsv">ส่งออก CSV</button>') +
+      '<div class="filters"><div class="field" style="flex:2 1 240px"><label for="u-q">ค้นหาชื่อหรืออีเมล</label><input id="u-q" data-uf="q" value="' + esc(state.q) + '" autocomplete="off" placeholder="พิมพ์ตัวอักษรขึ้นต้น เช่น kru"></div>' +
+      '<div class="field"><label for="u-s">สถานะ</label>' + sel('u-s', 'fStatus', [['all', 'ทั้งหมด'], ['active', 'ใช้งาน'], ['suspended', 'ถูกระงับ']]) + '</div>' +
+      '<div class="field"><label for="u-r">บทบาท</label>' + sel('u-r', 'fRole', [['all', 'ทั้งหมด'], ['member', 'สมาชิก'], ['admin', 'Admin'], ['super_admin', 'Super Admin']]) + '</div></div>' +
+      '<p class="foot-note">ค้นหาได้เฉพาะตัวอักษรขึ้นต้นของชื่อหรืออีเมล (ข้อจำกัดของ Firestore ตาม TR-82)</p><div id="userTable">' + userTable() + '</div>';
+  }
+  function userTable() {
+    const a = me(), list = filteredUsers();
+    return '<p class="small muted num">แสดง ' + list.length + ' จาก ' + db.users.length + ' บัญชี</p><div class="tbl-wrap"><table><thead><tr><th>ผู้ใช้</th><th>บทบาท</th><th>สถานะ</th><th>สมัครเมื่อ</th><th>Login ล่าสุด</th><th class="r">QR</th><th></th></tr></thead><tbody>' +
+      (list.length ? list.map(u => {
+        const open = state.openUser === u.id;
+        return '<tr' + (open ? ' class="open"' : '') + '><td><div>' + esc(u.name) + (u.id === a.id ? ' <span class="pill neutral">คุณ</span>' : '') + '</div><div class="small muted">' + esc(u.email) + '</div></td><td>' + rolePill(u) + '</td><td>' + statusPill(u) + '</td><td class="num">' + fmtDate(u.createdAt) + '</td><td class="num">' + fmtDate(u.lastLogin) + '</td><td class="r num">' + u.qrs + '</td>' +
+          '<td><button class="btn sm" data-act="openUser" data-id="' + u.id + '" aria-expanded="' + open + '">' + (open ? 'ปิด' : 'จัดการ') + '</button></td></tr>' + (open ? '<tr class="detail"><td colspan="7">' + userDetail(a, u) + '</td></tr>' : '');
+      }).join('') : '<tr><td colspan="7" class="muted">ไม่พบผู้ใช้ที่ตรงกับเงื่อนไข</td></tr>') + '</tbody></table></div>';
+  }
+  function userDetail(a, u) {
+    const info = '<dl class="kv"><dt>ID</dt><dd class="mono">' + u.id + '</dd><dt>บัญชี Google</dt><dd>' + esc(u.email) + '</dd><dt>สมัครเมื่อ</dt><dd>' + fmtDate(u.createdAt, true) + '</dd><dt>Login ล่าสุด</dt><dd>' + fmtDate(u.lastLogin, true) + '</dd>' +
+      (isAdmin(u) ? '<dt>2FA</dt><dd>' + (u.mfa ? 'ลงทะเบียนแล้ว · รหัสกู้คืนเหลือ ' + u.mfa.recovery.length + ' ชุด' : 'ยังไม่ลงทะเบียน') + '</dd>' : '') +
+      (u.status === 'suspended' ? '<dt>เหตุผลที่ระงับ</dt><dd>' + esc(u.reason) + '</dd>' : '') + '</dl><p class="foot-note">CMS ไม่แสดงเนื้อหาใน QR ที่ผู้ใช้บันทึก</p>';
+    if (!canManage(a, u)) return '<div class="detail-grid"><div>' + info + '</div><div class="alert info">จัดการบัญชีนี้ไม่ได้ เพราะเป็นบัญชีของคุณเอง หรือมีบทบาทเท่ากันหรือสูงกว่า</div></div>';
+    const acts = [];
+    if (u.status === 'active') acts.push('<div class="act"><label for="rs-' + u.id + '">ระงับบัญชี (ต้องระบุเหตุผล)</label><div class="row"><input id="rs-' + u.id + '" placeholder="เช่น ใช้ QR หลอกลวง"><button class="btn btn-danger sm" data-act="suspend" data-id="' + u.id + '">ระงับ</button></div><span class="err" id="rs-err-' + u.id + '"></span></div>');
+    else acts.push('<div class="act"><div><button class="btn sm" data-act="unsuspend" data-id="' + u.id + '">ยกเลิกการระงับ</button></div></div>');
+    acts.push('<div class="act"><div class="row"><button class="btn sm" data-act="revoke" data-id="' + u.id + '">Logout ทุกอุปกรณ์</button>' + (a.role === 'super_admin' && isAdmin(u) && u.mfa ? '<button class="btn sm" data-act="resetMfa" data-id="' + u.id + '">รีเซ็ต 2FA</button>' : '') + '</div></div>');
+    if (a.role === 'super_admin') acts.push('<div class="act"><label for="rl-' + u.id + '">บทบาท (เฉพาะ Super Admin)</label><div class="row"><select id="rl-' + u.id + '"><option value="member"' + (u.role === 'member' ? ' selected' : '') + '>สมาชิก</option><option value="admin"' + (u.role === 'admin' ? ' selected' : '') + '>Admin</option></select><button class="btn sm" data-act="setRole" data-id="' + u.id + '">บันทึกบทบาท</button></div><span class="foot-note">ตั้งเป็น Admin แล้ว ผู้ใช้ต้องลงทะเบียน 2FA ก่อนเข้า CMS ครั้งแรก</span></div>');
+    acts.push('<div class="act"><label for="dl-' + u.id + '">ลบบัญชี: พิมพ์อีเมลของผู้ใช้เพื่อยืนยัน</label><div class="row"><input id="dl-' + u.id + '" placeholder="' + esc(u.email) + '"><button class="btn btn-danger-solid sm" data-act="delete" data-id="' + u.id + '">ลบ</button></div><span class="err" id="dl-err-' + u.id + '"></span><span class="foot-note">Login ไม่ได้ทันที ข้อมูลถูกลบถาวรภายใน 30 วัน</span></div>');
+    return '<div class="detail-grid"><div>' + info + '</div><div class="stack">' + acts.join('') + '</div></div>';
+  }
+
+  function viewAds() {
+    const st = state.adsDraft || clone(db.settings), e = state.adsErr;
+    const err = k => e[k] ? '<span class="err">' + esc(e[k]) + '</span>' : '';
+    return head('โฆษณาและ GA', 'บันทึกแล้วมีผลกับหน้าเว็บภายใน 1 นาที ไม่ต้อง deploy ใหม่') +
+      (!db.settings.adsEnabled ? '<div class="alert warn">ยังไม่มีบัญชี AdSense โฆษณาจึงปิดอยู่ หลังบัญชีได้รับอนุมัติ ให้ใส่ publisher ID และ ads.txt แล้วเปิดสวิตช์ด้านล่าง</div>' : '') +
+      '<form data-form="ads" class="stack" novalidate><div class="panel stack"><h2>โฆษณา</h2>' +
+      '<label class="switch"><input type="checkbox" id="ad-on"' + (st.adsEnabled ? ' checked' : '') + '> แสดงโฆษณาทั้งเว็บไซต์</label>' +
+      '<label class="switch"><input type="checkbox" id="ad-hide"' + (st.hideForMembers ? ' checked' : '') + '> ซ่อนโฆษณาให้สมาชิกที่ Login อยู่</label>' +
+      '<p class="foot-note">หน้า Login, บัญชี และ CMS ไม่มีโฆษณาเสมอ</p></div>' +
+      '<div class="tbl-wrap"><table><thead><tr><th>ตำแหน่ง</th><th>ขนาด</th><th>Ad client</th><th>Ad slot ID</th><th>เปิด</th></tr></thead><tbody>' +
+      st.slots.map(s => '<tr><td class="mono small">' + s.key + '</td><td class="num small">' + esc(s.size) + '</td><td><input id="sc-' + s.key + '" class="mono" value="' + esc(s.client) + '" placeholder="ca-pub-0000000000000000" aria-label="Ad client ' + s.key + '" style="min-width:210px">' + err('c-' + s.key) + '</td><td><input id="ss-' + s.key + '" class="mono" value="' + esc(s.slot) + '" placeholder="1234567890" aria-label="Ad slot ' + s.key + '" style="min-width:130px">' + err('s-' + s.key) + '</td><td><label class="switch"><input type="checkbox" id="se-' + s.key + '"' + (s.enabled ? ' checked' : '') + ' aria-label="เปิด ' + s.key + '"></label></td></tr>').join('') +
+      '</tbody></table></div><p class="foot-note">ตรวจรูปแบบ ID เฉพาะตำแหน่งที่เปิดอยู่ และเฉพาะตอนเปิดโฆษณาทั้งเว็บ</p>' +
+      '<div class="panel stack"><h2>ทดสอบเครือข่ายโฆษณา (A/B) <span class="pill neutral">Phase 1.1</span></h2><div class="row" style="align-items:center"><label for="w-ad" style="flex:none">AdSense</label><input id="w-ad" class="num" value="' + st.weights.adsense + '" style="flex:0 0 80px;text-align:right"> %<label for="w-ez" style="flex:none;margin-left:12px">Ezoic</label><input id="w-ez" class="num" value="' + st.weights.ezoic + '" style="flex:0 0 80px;text-align:right"> %</div>' + err('w') + '</div>' +
+      '<div class="grid2"><div class="panel stack"><h2>Google Analytics 4</h2><label class="switch"><input type="checkbox" id="ga-on"' + (st.gaEnabled ? ' checked' : '') + '> เก็บข้อมูล Analytics</label><div class="field"><label for="ga-id">Measurement ID</label><input id="ga-id" class="mono" value="' + esc(st.gaId) + '" placeholder="G-XXXXXXX">' + err('ga') + '</div></div>' +
+      '<div class="panel stack"><h2>ads.txt</h2><div class="field"><label for="ads-txt">เนื้อหาไฟล์ /ads.txt</label><textarea id="ads-txt" class="mono" placeholder="google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0">' + esc(st.adsTxt) + '</textarea>' + err('txt') + '</div></div></div>' +
+      '<div class="panel stack"><h2>ตั้งค่าสมาชิก</h2><div class="field" style="max-width:260px"><label for="max-qr">บันทึก QR ได้สูงสุดต่อบัญชี</label><input id="max-qr" class="num" value="' + st.maxSaved + '">' + err('max') + '</div></div>' +
+      '<div><button class="btn btn-primary" type="submit">บันทึกการตั้งค่า</button></div></form>';
+  }
+
+  function viewAff() {
+    const list = db.affiliates.slice().sort((a, b) => a.sort - b.sort);
+    return head('Affiliate', 'การ์ดสินค้าแสดงหลังผู้ใช้ดาวน์โหลด QR ตามประเภทที่เลือก', '<button class="btn btn-primary" data-act="affNew">+ เพิ่มสินค้า</button>') +
+      (state.affEdit ? affForm() : '') +
+      '<div class="tbl-wrap"><table><thead><tr><th class="r">ลำดับ</th><th>สินค้า</th><th>แพลตฟอร์ม</th><th>แสดงกับ</th><th class="r">คลิก 30 วัน</th><th>แสดง</th><th></th></tr></thead><tbody>' +
+      list.map(a => '<tr><td class="r num">' + a.sort + '</td><td>' + esc(a.nameTh) + '<div class="small muted">' + esc(a.price) + '</div></td><td>' + esc(a.platform) + '</td><td class="small">' + a.types.map(typeLabel).join(', ') + '</td><td class="r num">' + a.clicks + '</td>' +
+        '<td><label class="switch"><input type="checkbox" data-aff-toggle="' + a.id + '"' + (a.enabled ? ' checked' : '') + ' aria-label="แสดง ' + esc(a.nameTh) + '"></label></td>' +
+        '<td><div class="row" style="flex-wrap:nowrap">' + (state.affConfirm === a.id ? '<button class="btn btn-danger-solid sm" data-act="affDelete" data-id="' + a.id + '">ยืนยันลบ</button><button class="btn sm" data-act="affCancelDel">ยกเลิก</button>' : '<button class="btn sm" data-act="affEdit" data-id="' + a.id + '">แก้ไข</button><button class="btn-text small" data-act="affAskDel" data-id="' + a.id + '">ลบ</button>') + '</div></td></tr>').join('') +
+      '</tbody></table></div><p class="foot-note">CTR คำนวณจาก impression ใน GA4 (เฉพาะผู้ที่ยินยอมคุกกี้วิเคราะห์) ลิงก์ใน prototype เป็นหน้าค้นหาสินค้าตัวอย่าง</p>';
+  }
+  function affForm() {
+    const isNew = state.affEdit === 'new';
+    const a = isNew ? { nameTh: '', nameEn: '', platform: 'Shopee', price: '', types: ['url'], url: 'https://', sort: db.affiliates.length + 1 } : db.affiliates.find(x => x.id === state.affEdit);
+    const e = state.affErr, err = k => e[k] ? '<span class="err">' + esc(e[k]) + '</span>' : '';
+    return '<form class="panel stack" data-form="aff" novalidate><h2>' + (isNew ? 'เพิ่มสินค้า' : 'แก้ไขสินค้า') + '</h2><div class="grid2">' +
+      '<div class="field"><label for="af-th">ชื่อ (ไทย)</label><input id="af-th" value="' + esc(a.nameTh) + '">' + err('th') + '</div>' +
+      '<div class="field"><label for="af-en">ชื่อ (อังกฤษ)</label><input id="af-en" value="' + esc(a.nameEn) + '"></div>' +
+      '<div class="field"><label for="af-pf">แพลตฟอร์ม</label><select id="af-pf">' + ['Shopee', 'Lazada', 'Involve Asia', 'ACCESSTRADE'].map(p => '<option' + (a.platform === p ? ' selected' : '') + '>' + p + '</option>').join('') + '</select></div>' +
+      '<div class="field"><label for="af-pr">ราคาโดยประมาณ</label><input id="af-pr" value="' + esc(a.price) + '" placeholder="฿99–250"></div>' +
+      '<div class="field" style="grid-column:1/-1"><label for="af-url">ลิงก์ Affiliate</label><input id="af-url" type="url" class="mono" value="' + esc(a.url) + '">' + err('url') + '<span class="foot-note">ต้องขึ้นต้นด้วย https และเป็นโดเมนของแพลตฟอร์มที่อนุญาต: ' + ALLOWED_HOSTS.join(', ') + '</span></div>' +
+      '<div class="field"><label for="af-sort">ลำดับการแสดง</label><input id="af-sort" class="num" value="' + a.sort + '">' + err('sort') + '</div></div>' +
+      '<fieldset class="stack" style="border:0;padding:0;margin:0"><legend class="small" style="font-weight:500;margin-bottom:6px">แสดงกับ QR ประเภท</legend><div class="types-check">' + TYPES.map(t => '<label class="check"><input type="checkbox" name="af-type" value="' + t[0] + '"' + (a.types.indexOf(t[0]) >= 0 ? ' checked' : '') + '> ' + t[1] + '</label>').join('') + '</div>' + err('types') + '</fieldset>' +
+      '<div class="row"><button class="btn btn-primary" type="submit">บันทึก</button><button class="btn" type="button" data-act="affClose">ยกเลิก</button></div></form>';
+  }
+
+  function auditTable(list) {
+    return '<div class="tbl-wrap"><table><thead><tr><th>เวลา</th><th>ผู้ทำ</th><th>การกระทำ</th><th>เป้าหมาย</th><th>รายละเอียด</th></tr></thead><tbody>' +
+      (list.length ? list.map(a => '<tr><td class="num small">' + fmtDate(a.at, true) + '</td><td class="small">' + esc(a.actor) + '</td><td class="mono small">' + esc(a.action) + '</td><td class="small">' + esc(a.target) + '</td><td class="small">' + esc(a.detail) + '</td></tr>').join('') : '<tr><td colspan="5" class="muted">ไม่มีรายการ</td></tr>') + '</tbody></table></div>';
+  }
+  function viewAudit() {
+    const u = me(), sup = u.role === 'super_admin';
+    const actors = Array.from(new Set(db.audit.map(a => a.actor)));
+    const list = db.audit.filter(a => (sup || a.actor === u.email) && (state.auActor === 'all' || a.actor === state.auActor) && (!state.auAction || a.action.indexOf(state.auAction) === 0));
+    return head('Audit Log', 'บันทึกทุกการกระทำใน CMS แก้ไขหรือลบไม่ได้ เก็บ 400 วัน') +
+      (!sup ? '<div class="alert info">Admin เห็นเฉพาะรายการของตัวเอง Super Admin เห็นทั้งหมด</div>' : '') +
+      '<div class="filters">' + (sup ? '<div class="field"><label for="au-actor">ผู้ทำ</label><select id="au-actor" data-af="auActor"><option value="all">ทุกคน</option>' + actors.map(x => '<option' + (state.auActor === x ? ' selected' : '') + '>' + esc(x) + '</option>').join('') + '</select></div>' : '') +
+      '<div class="field"><label for="au-action">การกระทำ</label><select id="au-action" data-af="auAction">' + [['', 'ทั้งหมด'], ['user.', 'ผู้ใช้'], ['settings.', 'ตั้งค่า'], ['affiliate.', 'Affiliate'], ['users.export', 'ส่งออก CSV'], ['auth.', 'เข้าสู่ระบบ']].map(o => '<option value="' + o[0] + '"' + (state.auAction === o[0] ? ' selected' : '') + '>' + o[1] + '</option>').join('') + '</select></div></div>' +
+      '<p class="small muted num">' + list.length + ' รายการ</p>' + auditTable(list);
+  }
+
+  /* ---------- render ---------- */
+  let lastRoute = null;
+  function render() {
+    applyTheme(); renderProto(); renderTop();
+    const u = me(), r = route();
+    let html;
+    if (!u) html = viewLogin();
+    else if (!isAdmin(u)) html = viewDenied();
+    else if (!u.mfa) { if (!state.enroll) state.enroll = { step: 1, secret: rid(32), codes: [] }; html = viewEnroll(); }
+    else if (!session.mfa) html = viewVerify();
+    else {
+      const map = { overview: viewOverview, users: viewUsers, ads: viewAds, affiliate: viewAff, audit: viewAudit };
+      html = shell(map[r] ? r : 'overview', (map[r] || viewOverview)());
+    }
+    $('#app').innerHTML = html;
+    if (r !== lastRoute) { window.scrollTo(0, 0); lastRoute = r; }
+    const qr = $('#totp-qr');
+    if (qr && typeof window.QRCodeStyling === 'function') {
+      const uri = 'otpauth://totp/' + encodeURIComponent('QREASY CMS:' + u.email) + '?secret=' + state.enroll.secret + '&issuer=' + encodeURIComponent('QREASY CMS');
+      try { new window.QRCodeStyling({ width: 180, height: 180, type: 'svg', data: uri, margin: 4, qrOptions: { errorCorrectionLevel: 'M' }, dotsOptions: { color: '#101a30', type: 'square' }, backgroundOptions: { color: '#ffffff' } }).append(qr); } catch (e) {}
+    }
+  }
+  window.addEventListener('hashchange', render);
+
+  function signIn(u) {
+    session = { uid: u.id, mfa: false, at: Date.now() }; store.set('qa_session', session);
+    u.lastLogin = Date.now(); persist();
+    state.pickerOpen = false; state.useRecovery = false; state.mfaFails = 0;
+    if (!isAdmin(u)) { render(); return; }
+    render();
+  }
+  function passMfa(method) {
+    session.mfa = true; store.set('qa_session', session);
+    audit('auth.cms_login', me().email, method);
+    toast('ยืนยันตัวตนแล้ว'); go('overview');
+  }
+  function mfaFail(text) {
+    state.mfaFails++;
+    if (state.mfaFails >= 5) { state.mfaLockUntil = Date.now() + 15 * 60000; state.mfaFails = 0; }
+    state.authMsg = { kind: 'bad', text }; render();
+  }
+
+  /* ---------- actions ---------- */
+  const find = id => db.users.find(x => x.id === id);
+  const refreshUsers = () => { const t = $('#userTable'); if (t) t.innerHTML = userTable(); };
+  const actions = {
+    theme() { state.theme = { system: 'light', light: 'dark', dark: 'system' }[state.theme]; store.set('qa_theme', state.theme); render(); },
+    reset() {
+      if (!state.resetArmed) { state.resetArmed = true; renderProto(); setTimeout(() => { state.resetArmed = false; renderProto(); }, 4000); return; }
+      state.resetArmed = false; db = seed(); persist(); session = null; store.del('qa_session'); state.enroll = null; go('overview'); toast('รีเซ็ตข้อมูลตัวอย่างแล้ว');
+    },
+    google() { state.pickerOpen = !state.pickerOpen; render(); },
+    pick(b) { const u = find(b.dataset.id); if (!u) return; if (u.status !== 'active') { state.authMsg = { kind: 'bad', text: 'บัญชีนี้ถูกระงับ' }; state.pickerOpen = false; return render(); } signIn(u); },
+    logout() { session = null; store.del('qa_session'); state.enroll = null; state.pickerOpen = false; go('overview'); },
+    toggleRecovery() { state.useRecovery = !state.useRecovery; render(); },
+    copyCodes() {
+      const t = state.enroll.codes.join('\n');
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(() => toast('คัดลอกรหัสกู้คืนแล้ว'), () => toast('คัดลอกไม่ได้ ให้เลือกข้อความแล้วคัดลอกเอง', 'bad'));
+      else toast('คัดลอกไม่ได้ ให้เลือกข้อความแล้วคัดลอกเอง', 'bad');
+    },
+    dlCodes() { saveFile('qreasy-cms-recovery-codes.txt', 'QREASY CMS recovery codes for ' + me().email + '\n\n' + state.enroll.codes.join('\n') + '\n').then(ok => { if (ok) toast('ดาวน์โหลดรหัสกู้คืนแล้ว'); }); },
+    finishEnroll() {
+      if (!$('#saved-codes').checked) return toast('ติ๊กยืนยันว่าเก็บรหัสกู้คืนแล้วก่อน', 'bad');
+      const u = me(); u.mfa = { enrolledAt: Date.now(), recovery: state.enroll.codes.slice() }; persist();
+      audit('auth.mfa_enroll', u.email, 'TOTP'); state.enroll = null; passMfa('mfa_enroll');
+    },
+    openUser(b) { state.openUser = state.openUser === b.dataset.id ? null : b.dataset.id; refreshUsers(); },
+    suspend(b) {
+      const u = find(b.dataset.id), reason = $('#rs-' + u.id).value.trim();
+      if (!reason) { $('#rs-err-' + u.id).textContent = 'ระบุเหตุผลก่อนระงับ'; return; }
+      u.status = 'suspended'; u.reason = reason; persist(); audit('user.suspend', u.email, reason); refreshUsers();
+      toast('ระงับบัญชีและ Logout ทุกอุปกรณ์แล้ว');
+    },
+    unsuspend(b) { const u = find(b.dataset.id); u.status = 'active'; u.reason = ''; persist(); audit('user.unsuspend', u.email); refreshUsers(); toast('ยกเลิกการระงับแล้ว'); },
+    revoke(b) { const u = find(b.dataset.id); audit('user.revoke_sessions', u.email); toast('Logout ' + u.email + ' จากทุกอุปกรณ์แล้ว'); },
+    resetMfa(b) { const u = find(b.dataset.id); u.mfa = null; persist(); audit('user.reset_mfa', u.email); refreshUsers(); toast('รีเซ็ต 2FA แล้ว ผู้ใช้ต้องลงทะเบียนใหม่ตอนเข้า CMS ครั้งถัดไป'); },
+    setRole(b) {
+      const a = me(), u = find(b.dataset.id), v = $('#rl-' + u.id).value;
+      if (a.role !== 'super_admin' || v === u.role) return;
+      const before = u.role; u.role = v; if (v === 'member') u.mfa = null; persist();
+      audit('user.role', u.email, before + ' → ' + v); refreshUsers(); toast('เปลี่ยนบทบาทแล้ว');
+    },
+    delete(b) {
+      const u = find(b.dataset.id);
+      if ($('#dl-' + u.id).value.trim().toLowerCase() !== u.email.toLowerCase()) { $('#dl-err-' + u.id).textContent = 'อีเมลไม่ตรง จึงยังไม่ลบ'; return; }
+      db.users = db.users.filter(x => x.id !== u.id); state.openUser = null; persist(); audit('user.delete', u.email, 'ลบโดยผู้ดูแล'); refreshUsers(); toast('ลบบัญชีแล้ว');
+    },
+    exportCsv() {
+      const list = filteredUsers(), q = v => '"' + String(v).replace(/"/g, '""') + '"';
+      const csv = '﻿' + ['id,name,email,role,status,created_at,last_login_at'].concat(list.map(u => [u.id, u.name, u.email, u.role, u.status, new Date(u.createdAt).toISOString(), new Date(u.lastLogin).toISOString()].map(q).join(','))).join('\n');
+      const d = new Date(), p = n => String(n).padStart(2, '0');
+      saveFile('qreasy-users-' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + '.csv', csv).then(ok => {
+        if (ok) { audit('users.export_csv', 'ผู้ใช้ ' + list.length + ' รายการ', 'สถานะ=' + state.fStatus + ', บทบาท=' + state.fRole + (state.q ? ', ค้นหา=' + state.q : '')); toast('ส่งออก ' + list.length + ' รายการแล้ว'); }
+      });
+    },
+    affNew() { state.affEdit = 'new'; state.affErr = {}; render(); },
+    affEdit(b) { state.affEdit = b.dataset.id; state.affErr = {}; render(); },
+    affClose() { state.affEdit = null; state.affErr = {}; render(); },
+    affAskDel(b) { state.affConfirm = b.dataset.id; render(); },
+    affCancelDel() { state.affConfirm = null; render(); },
+    affDelete(b) { const a = db.affiliates.find(x => x.id === b.dataset.id); db.affiliates = db.affiliates.filter(x => x.id !== a.id); state.affConfirm = null; persist(); audit('affiliate.delete', a.nameTh); render(); toast('ลบสินค้าแล้ว'); }
+  };
+  document.addEventListener('click', e => {
+    const el = e.target.closest('[data-act]');
+    if (!el || el.disabled) return;
+    const fn = actions[el.dataset.act]; if (!fn) return;
+    e.preventDefault(); fn(el, e);
+  });
+  function onFilter(e) {
+    const el = e.target;
+    if (el.dataset.uf) { state[el.dataset.uf] = el.value; refreshUsers(); return; }
+    if (el.dataset.af && e.type === 'change') { state[el.dataset.af] = el.value; render(); return; }
+    if (el.dataset.affToggle && e.type === 'change') {
+      const a = db.affiliates.find(x => x.id === el.dataset.affToggle); a.enabled = el.checked; persist();
+      audit('affiliate.toggle', a.nameTh, a.enabled ? 'แสดง' : 'ซ่อน'); toast(a.enabled ? 'แสดงสินค้าแล้ว' : 'ซ่อนสินค้าแล้ว');
+    }
+  }
+  document.addEventListener('input', onFilter);
+  document.addEventListener('change', e => { if (e.target.dataset.uf && e.target.tagName === 'INPUT') return; onFilter(e); });
+
+  const forms = {
+    enroll() {
+      if ($('#en-code').value.trim() !== '123456') { state.authMsg = { kind: 'bad', text: 'รหัสไม่ถูกต้อง ตรวจว่าเวลาในมือถือตรงกับเวลาจริง แล้วกรอกรหัสล่าสุดจากแอป' }; return render(); }
+      state.enroll.step = 2; state.enroll.codes = Array.from({ length: 10 }, () => rid(4) + '-' + rid(4)); render();
+    },
+    verify() {
+      if (state.mfaLockUntil > Date.now()) return render();
+      if ($('#vf').value.trim() !== '123456') return mfaFail('รหัสไม่ถูกต้อง ลองรหัสล่าสุดจากแอป');
+      passMfa('totp');
+    },
+    recovery() {
+      if (state.mfaLockUntil > Date.now()) return render();
+      const u = me(), v = $('#rc').value.trim().toUpperCase(), i = u.mfa.recovery.indexOf(v);
+      if (i < 0) return mfaFail('รหัสกู้คืนไม่ถูกต้อง หรือถูกใช้ไปแล้ว');
+      u.mfa.recovery.splice(i, 1); persist(); audit('auth.recovery_code', u.email, 'เหลือ ' + u.mfa.recovery.length + ' ชุด');
+      toast('ใช้รหัสกู้คืนแล้ว เหลือ ' + u.mfa.recovery.length + ' ชุด'); passMfa('recovery');
+    },
+    ads() {
+      const st = clone(db.settings), errs = {};
+      st.adsEnabled = $('#ad-on').checked; st.hideForMembers = $('#ad-hide').checked;
+      st.slots.forEach(s => {
+        s.client = $('#sc-' + s.key).value.trim(); s.slot = $('#ss-' + s.key).value.trim(); s.enabled = $('#se-' + s.key).checked;
+        if (st.adsEnabled && s.enabled) {
+          if (!/^ca-pub-\d{16}$/.test(s.client)) errs['c-' + s.key] = 'ใช้รูปแบบ ca-pub- ตามด้วยตัวเลข 16 หลัก';
+          if (!/^\d{6,}$/.test(s.slot)) errs['s-' + s.key] = 'ตัวเลขอย่างน้อย 6 หลัก';
+        }
+      });
+      const wa = Number($('#w-ad').value), we = Number($('#w-ez').value);
+      if (!Number.isInteger(wa) || !Number.isInteger(we) || wa < 0 || we < 0 || wa + we !== 100) errs.w = 'สัดส่วนต้องเป็นจำนวนเต็มและรวมกันได้ 100%';
+      st.weights = { adsense: wa, ezoic: we };
+      st.gaEnabled = $('#ga-on').checked; st.gaId = $('#ga-id').value.trim().toUpperCase();
+      if (st.gaEnabled && !/^G-[A-Z0-9]{4,}$/.test(st.gaId)) errs.ga = 'ใช้รูปแบบ G- ตามด้วยตัวอักษรหรือตัวเลข';
+      st.adsTxt = $('#ads-txt').value;
+      const bad = st.adsTxt.split('\n').map(l => l.trim()).filter(l => l && l[0] !== '#').find(l => l.split(',').length < 3);
+      if (bad) errs.txt = 'บรรทัดนี้ต้องมีอย่างน้อย 3 ช่องคั่นด้วยจุลภาค: ' + bad;
+      if (st.adsEnabled && !st.adsTxt.trim()) errs.txt = 'ใส่ ads.txt ก่อนเปิดโฆษณา';
+      st.maxSaved = Number($('#max-qr').value);
+      if (!Number.isInteger(st.maxSaved) || st.maxSaved < 1 || st.maxSaved > 1000) errs.max = 'ใส่จำนวนเต็ม 1–1,000';
+      state.adsErr = errs;
+      if (Object.keys(errs).length) { state.adsDraft = st; render(); return toast('ยังบันทึกไม่ได้ แก้ช่องที่มีข้อความสีแดงก่อน', 'bad'); }
+      const o = db.settings, ch = [];
+      if (st.adsEnabled !== o.adsEnabled) ch.push('ads ' + (st.adsEnabled ? 'on' : 'off'));
+      if (st.hideForMembers !== o.hideForMembers) ch.push('hide_for_members ' + st.hideForMembers);
+      st.slots.forEach((s, i) => { const p = o.slots[i]; if (s.enabled !== p.enabled || s.client !== p.client || s.slot !== p.slot) ch.push(s.key + (s.enabled ? ' on' : ' off')); });
+      if (wa !== o.weights.adsense) ch.push('ab adsense ' + wa + '% / ezoic ' + we + '%');
+      if (st.gaEnabled !== o.gaEnabled || st.gaId !== o.gaId) ch.push('ga ' + (st.gaEnabled ? st.gaId : 'off'));
+      if (st.adsTxt !== o.adsTxt) ch.push('ads.txt');
+      if (st.maxSaved !== o.maxSaved) ch.push('max_saved_qr ' + st.maxSaved);
+      db.settings = st; state.adsDraft = null; persist();
+      if (ch.length) audit('settings.update', 'ads/ga', ch.join(', '));
+      render(); toast(ch.length ? 'บันทึกแล้ว' : 'ไม่มีอะไรเปลี่ยน');
+    },
+    aff() {
+      const errs = {}, isNew = state.affEdit === 'new';
+      const v = { nameTh: $('#af-th').value.trim(), nameEn: $('#af-en').value.trim(), platform: $('#af-pf').value, price: $('#af-pr').value.trim(), url: $('#af-url').value.trim(), sort: Number($('#af-sort').value), types: Array.from(document.querySelectorAll('input[name="af-type"]:checked')).map(x => x.value) };
+      if (!v.nameTh) errs.th = 'กรอกชื่อสินค้า';
+      let host = '';
+      try { const u = new URL(v.url); if (u.protocol !== 'https:') throw 0; host = u.hostname.toLowerCase(); } catch (e) { errs.url = 'ลิงก์ต้องขึ้นต้นด้วย https://'; }
+      if (host && ALLOWED_HOSTS.indexOf(host) < 0) errs.url = 'โดเมน ' + host + ' ไม่อยู่ในรายการที่อนุญาต';
+      if (!v.types.length) errs.types = 'เลือกอย่างน้อย 1 ประเภท';
+      if (!Number.isInteger(v.sort) || v.sort < 1) errs.sort = 'ใส่จำนวนเต็มตั้งแต่ 1';
+      state.affErr = errs;
+      if (Object.keys(errs).length) { render(); return toast('ยังบันทึกไม่ได้ แก้ช่องที่มีข้อความสีแดงก่อน', 'bad'); }
+      if (isNew) { db.affiliates.push(Object.assign({ id: 'a' + Date.now(), enabled: true, clicks: 0 }, v)); audit('affiliate.create', v.nameTh, v.platform); }
+      else { Object.assign(db.affiliates.find(x => x.id === state.affEdit), v); audit('affiliate.update', v.nameTh, v.platform); }
+      persist(); state.affEdit = null; render(); toast('บันทึกสินค้าแล้ว');
+    }
+  };
+  document.addEventListener('submit', e => { e.preventDefault(); const f = forms[e.target.dataset.form]; if (f) f(); });
+
+  render();
+})();
+</script>
